@@ -1,0 +1,112 @@
+buildscript {
+    repositories {       
+		maven { url 'http://dl.bintray.com/msgilligan/maven' }
+		maven { url 'http://jcenter.bintray.com' }
+		mavenCentral()
+		maven { url 'http://dl.bintray.com/vermeulen-mp/gradle-plugins' }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.4.RELEASE")
+		classpath("com.wiredforcode:gradle-heroku-plugin:1.0.0")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+apply plugin: "jacoco"
+apply plugin: 'war'
+apply plugin: 'heroku'
+        
+
+
+test {
+
+    useJUnit {
+    }
+ 
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+    }
+    
+}
+
+
+
+
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/reports/jacocoHtml"
+    }
+	 additionalSourceDirs = files("src/main/java")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+	maven {
+		url 'http://repo.spring.io/milestone'
+	}
+}
+
+dependencies {
+    // tag::jetty[]	
+    compile ("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile "org.springframework.boot:spring-boot-starter-jetty"
+    // end::jetty[]
+    // tag::actuator[]
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    
+    runtime "org.hsqldb:hsqldb"
+    runtime "mysql:mysql-connector-java:5.1.31"
+    
+    //compile("org.codehaus.groovy:groovy-all")
+    compile "org.codehaus.groovy:groovy"
+    compile "org.codehaus.groovy:groovy-templates"
+    
+    // end::actuator[]
+    testCompile("junit:junit")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    
+    
+}
+
+
+springBoot {
+	mainClass = "de.craut.Application"
+	backupSource = true
+}
+
+jar {
+    baseName = 'craut'
+    version =  '0.1.0'
+}
+
+def springBootWarLauncherClassName = "org.springframework.boot.loader.WarLauncher"
+
+heroku {
+	appName = 'craut67'
+
+	//get this from heroku
+	apiKey = 'ed333d53-d87e-43c4-bc72-d2f471ab98c3'
+
+}
+

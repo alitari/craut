@@ -1,0 +1,26 @@
+spring:
+    mvc.message-codes-resolver.format: PREFIX_ERROR_CODE
+    groovy.template.cache: false
+
+logging:
+    file: logfile.txt   
+
+logging.level:
+    org.springframework: INFO
+    org.hibernate: ERROR    
+    
+
+server:
+    port: 8090
+    
+---
+ 
+ spring:
+    profiles: localmysql
+    
+ spring.datasource:
+     url: jdbc:mysql://localhost:3306/test?user=root
+     username: root
+     password: root
+     driverClassName: com.mysql.jdbc.Driver
+    
