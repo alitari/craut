@@ -3,11 +3,10 @@ buildscript {
 		maven { url 'http://dl.bintray.com/msgilligan/maven' }
 		maven { url 'http://jcenter.bintray.com' }
 		mavenCentral()
-		maven { url 'http://dl.bintray.com/vermeulen-mp/gradle-plugins' }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.4.RELEASE")
-		classpath("com.wiredforcode:gradle-heroku-plugin:1.0.0")
+        classpath("org.cloudfoundry:cf-gradle-plugin:1.0.1")
     }
 }
 
@@ -16,7 +15,8 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: "jacoco"
 apply plugin: 'war'
-apply plugin: 'heroku'
+apply plugin: 'cloudfoundry'
+apply plugin: 'findbugs'
         
         
 defaultTasks "clean", "build"        
@@ -51,6 +51,20 @@ jacocoTestReport {
     }
 	 additionalSourceDirs = files("src/main/java")
 }
+
+findbugs {
+        toolVersion = "3.0.0"
+        sourceSets = [sourceSets.main]
+        ignoreFailures = true
+        reportsDir = file("$buildDir/reports/findbugs")
+        effort = "max"
+        reportLevel = "low"
+        //visitors = ["FindSqlInjection", "SwitchFallthrough"]
+        //omitVisitors = ["FindNonShortCircuit"]
+        //includeFilter = file("$rootProject.projectDir/.findbugs/includeFilter.xml")
+        excludeFilter = file("$rootProject.projectDir/.findbugs/excludeFilter.xml")
+}
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
@@ -88,7 +102,6 @@ dependencies {
     testCompile("junit:junit")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     
-    
 }
 
 
@@ -104,11 +117,14 @@ jar {
 
 def springBootWarLauncherClassName = "org.springframework.boot.loader.WarLauncher"
 
-heroku {
-	appName = 'craut67'
-
-	//get this from heroku
-	apiKey = 'ed333d53-d87e-43c4-bc72-d2f471ab98c3'
-
-}
-
+cloudfoundry {
+      target = "https://api.run.pivotal.io"
+      space = "development"
+      organization = "alexkrieg-test"
+      file = file("build/libs/craut.war")
+      uri = "craut.cfapps.io"
+      memory = 512
+      instances = 1
+      env = [ "key": "value" ]
+      
+  }
