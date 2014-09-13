@@ -18,6 +18,8 @@ apply plugin: "jacoco"
 apply plugin: 'war'
 apply plugin: 'heroku'
         
+        
+defaultTasks "clean", "build"        
 
 
 test {
