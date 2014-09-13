@@ -1,2 +1,29 @@
 <FindBugsFilter>
+	<Match>     
+      <Bug pattern="SE_NO_SERIALVERSIONID" />
+    </Match>
+    
+    <Match>     
+      <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+    
+    <Match>     
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    
+    
+    
+    
+    <Match>
+  <!-- the Match filter is equivalent to a logical 'And' -->
+
+  <Class name="~.*\.*Test" />
+  <!-- test classes are suffixed by 'Test' -->
+
+  <Not>
+      <Bug code="IJU" /> <!-- 'IJU' is the code for bugs related to JUnit test code -->
+  </Not>
+</Match>
+    
+    
 </FindBugsFilter>

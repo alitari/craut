@@ -38,7 +38,7 @@ public class TeamEventControllerTest {
 	private WebApplicationContext webApplicationContext;
 
 	@Before
-	public void setUp() {
+	public void setup() {
 		// We have to reset our mock between tests because the mock objects
 		// are managed by the Spring container. If we would not reset them,
 		// stubbing and verified behavior would "leak" from one test to another.

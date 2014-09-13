@@ -14,20 +14,22 @@ import de.craut.domain.TeamEventRepository;
 @Profile("!localmysql")
 public class HsqlSetup {
 
+	private static class InitHsqlDb implements InitDB {
+
+		@Override
+		public void init(ApplicationContext ctx) {
+			TeamEventRepository teamEventRepo = ctx.getBean(TeamEventRepository.class);
+			teamEventRepo.save(new TeamEvent("Grillen2", new Date()));
+			teamEventRepo.save(new TeamEvent("Daily", new Date()));
+			teamEventRepo.save(new TeamEvent("Estimation", new Date()));
+			teamEventRepo.save(new TeamEvent("Retro", new Date()));
+		}
+
+	}
+
 	@Bean
 	public InitDB initDB() {
-		return new InitDB() {
-
-			@Override
-			public void init(ApplicationContext ctx) {
-				TeamEventRepository teamEventRepo = ctx.getBean(TeamEventRepository.class);
-				teamEventRepo.save(new TeamEvent("Grillen2", new Date()));
-				teamEventRepo.save(new TeamEvent("Daily", new Date()));
-				teamEventRepo.save(new TeamEvent("Estimation", new Date()));
-				teamEventRepo.save(new TeamEvent("Retro", new Date()));
-
-			}
-		};
+		return new InitHsqlDb();
 	}
 
 }

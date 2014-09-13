@@ -9,15 +9,17 @@ import org.springframework.context.annotation.Profile;
 @Profile("localmysql")
 public class MySQLSetup {
 
+	private static class InitMySQLDb implements InitDB {
+
+		@Override
+		public void init(ApplicationContext ctx) {
+
+		}
+	}
+
 	@Bean
 	public InitDB initDB() {
-		return new InitDB() {
-
-			@Override
-			public void init(ApplicationContext ctx) {
-				//
-			}
-		};
+		return new InitMySQLDb();
 	}
 
 }
