@@ -29,11 +29,11 @@ public class NavElement {
 
 	public static final NavElement CREATE = new NavElement("create", "New Event");
 	public static final NavElement ITEM2 = new NavElement("item2", "item2");
-	public static final NavElement ITEM3 = new NavElement("create", "New Event 3");
+	public static final NavElement ITEM3 = new NavElement("item3", "New Event 3");
 	public static final NavElement ITEM4 = new NavElement("item4", "item4");
 
 	public static final List<NavElement> MENU_PAGE = Arrays.asList(new NavElement[] { PAGE1, PAGE2, PAGE3, PAGE4 });
 
-	public static final List<NavElement> MENU_MAIN = Arrays.asList(new NavElement[] { CREATE });
+	public static final List<NavElement> MENU_MAIN = Arrays.asList(new NavElement[] { CREATE, ITEM2, ITEM3 });
 
 }

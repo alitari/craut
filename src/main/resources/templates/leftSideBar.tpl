@@ -11,9 +11,9 @@ div( 'class':'left_side_bar') {
 	}
 
 	div('class':'col_1') {
-		h1() { yield('Blog')}
+		h1() { yield('Environment')}
 		div('class':'box') {
-			p() { yield("${model.blockContent}")}
+			div('class':'map','id':"map-canvas") { }
 		}
 	}
 }

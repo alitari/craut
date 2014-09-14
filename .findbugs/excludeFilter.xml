@@ -11,14 +11,10 @@
       <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     
-    
-    
-    
     <Match>
   <!-- the Match filter is equivalent to a logical 'And' -->
 
   <Class name="~.*\.*Test" />
-  <!-- test classes are suffixed by 'Test' -->
 
   <Not>
       <Bug code="IJU" /> <!-- 'IJU' is the code for bugs related to JUnit test code -->

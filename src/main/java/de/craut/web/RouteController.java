@@ -9,23 +9,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import de.craut.domain.TeamEvent;
-import de.craut.service.TeamEventService;
+import de.craut.domain.Route;
+import de.craut.service.RouteService;
 
 @Controller
-@RequestMapping("/teamevents")
+@RequestMapping("/routes")
 @EnableAutoConfiguration
-public class TeamEventController {
+public class RouteController {
 
 	@Autowired
-	private TeamEventService teamEventService;
+	private RouteService routeService;
 
 	@RequestMapping("/init")
 	public String init(@RequestParam(value = "name", required = false, defaultValue = "you") String name, Model model) {
 		model.addAttribute("name", name);
 		fillPageContent(model);
 		fillEvents(model);
-		return "teamevents";
+		return "routes";
 	}
 
 	private void fillPageContent(Model model) {
@@ -39,59 +39,59 @@ public class TeamEventController {
 	@RequestMapping("/delete")
 	public String delete(@RequestParam(value = "id", required = true) Long id, Model model) {
 		fillPageContent(model);
-		teamEventService.deleteEvent(id);
+		routeService.deleteRoute(id);
 		fillEvents(model);
-		return "teamevents";
+		return "routes";
 	}
 
 	@RequestMapping("/create")
 	public String create(Model model) {
 		fillPageContent(model);
-		return "teamevent";
+		return "route";
 	}
 
 	@RequestMapping("/created")
 	public String created(@RequestParam(value = "name", required = true) String name, Model model) {
 		fillPageContent(model);
-		teamEventService.createEvent(name);
+		routeService.createRoute(name);
 		fillEvents(model);
-		return "teamevents";
+		return "routes";
 	}
 
 	@RequestMapping("/edit")
 	public String edit(@RequestParam(value = "id", required = true) Long id, Model model) {
 		fillPageContent(model);
-		TeamEvent event = teamEventService.getEvent(id);
+		Route event = routeService.getRoute(id);
 		model.addAttribute("event", event);
-		return "teamevent";
+		return "route";
 	}
 
 	@RequestMapping("/edited")
 	public String edited(@RequestParam(value = "id", required = true) Long id, @RequestParam(value = "name", required = true) String name, Model model) {
 		fillPageContent(model);
-		TeamEvent event = teamEventService.getEvent(id);
+		Route event = routeService.getRoute(id);
 		event.setName(name);
-		teamEventService.updateEvent(event);
+		routeService.updateRoute(event);
 		fillEvents(model);
-		return "teamevents";
+		return "routes";
 	}
 
 	private void fillEvents(Model model) {
-		List<TeamEvent> events = teamEventService.getAll();
+		List<Route> events = routeService.getAll();
 		model.addAttribute("events", events);
 	}
 
-	// private TeamEvent deleteEvent(Long id) {
+	// private Route deleteEvent(Long id) {
 	// String url = "http://localhost:8090/events/delete/" + id;
 	// RestTemplate eventRest = new RestTemplate();
-	// TeamEvent deletedTeamEvent = eventRest.postForObject(url, null,
-	// TeamEvent.class);
-	// return deletedTeamEvent;
+	// Route deletedRoute = eventRest.postForObject(url, null,
+	// Route.class);
+	// return deletedRoute;
 	// }
 
-	// private List<TeamEvent> getEventsRest() {
+	// private List<Route> getEventsRest() {
 	// RestTemplate eventRest = new RestTemplate();
-	// List<TeamEvent> events = (List<TeamEvent>)
+	// List<Route> events = (List<Route>)
 	// eventRest.getForObject("http://localhost:8090/events", List.class);
 	// return events;
 	// }

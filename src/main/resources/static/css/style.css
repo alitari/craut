@@ -282,13 +282,20 @@ a.btn:hover{
 }
 
 .left_side_bar .col_1{
-	padding:0px 0 20px 0;
+	padding:0px 0 10px 0;
+	height:100%
 }
 
 .left_side_bar .col_1 .box{
 	padding:10px 15px 5px;
 	border:#283032 solid 1px;
 }
+
+
+#map-canvas {
+	height:200px
+}
+
 
 .left_side_bar .col_1 .box ul{
 	margin:0px;

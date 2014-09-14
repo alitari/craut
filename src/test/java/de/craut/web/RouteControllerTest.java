@@ -21,18 +21,18 @@ import org.springframework.web.context.WebApplicationContext;
 
 import de.craut.TestContext;
 import de.craut.WebConfig;
-import de.craut.service.TeamEventService;
+import de.craut.service.RouteService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestContext.class, WebConfig.class })
 @WebAppConfiguration
 @ActiveProfiles("test")
-public class TeamEventControllerTest {
+public class RouteControllerTest {
 
 	private MockMvc mockMvc;
 
 	@Autowired
-	private TeamEventService teamEventService;
+	private RouteService routeService;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -42,15 +42,15 @@ public class TeamEventControllerTest {
 		// We have to reset our mock between tests because the mock objects
 		// are managed by the Spring container. If we would not reset them,
 		// stubbing and verified behavior would "leak" from one test to another.
-		Mockito.reset(teamEventService);
+		Mockito.reset(routeService);
 
 		mockMvc = webAppContextSetup(webApplicationContext).build();
 
 	}
 
 	@Test
-	public void teamEventsInit() throws Exception {
-		mockMvc.perform(get("/teamevents/init")).andExpect(status().isOk()).andExpect(view().name("teamevents"))
+	public void routesInit() throws Exception {
+		mockMvc.perform(get("/routes/init")).andExpect(status().isOk()).andExpect(view().name("routes"))
 		        .andExpect(model().attribute("subscriptionContent", is("subscriptionContent...")));
 
 	}

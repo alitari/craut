@@ -6,7 +6,7 @@ html(lang:'en') {
 			include template: 'header.tpl'
 			div( 'id':'page_content') {
 				include template: 'leftSideBar.tpl'
-				include template: 'teameventDetails.tpl'
+				include template: 'routeDetails.tpl'
 				div('class':'clear')
 				include template: 'footer.tpl'
 			}

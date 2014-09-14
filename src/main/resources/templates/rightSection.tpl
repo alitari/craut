@@ -2,7 +2,7 @@ div( 'class':'right_section') {
 	div( 'class':'common_content') {
 		h2() { yield('Events')}
 		hr()
-		include template: 'eventList.tpl'
+		include template: 'routeList.tpl'
 	}
 	
 	div( 'class':'top_content') {

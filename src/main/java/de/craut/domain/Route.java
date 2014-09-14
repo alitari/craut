@@ -14,8 +14,8 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "team_event")
-public class TeamEvent implements Serializable {
+@Table(name = "route")
+public class Route implements Serializable {
 
 	@Id()
 	@Column(name = "id_te", nullable = false)
@@ -28,10 +28,10 @@ public class TeamEvent implements Serializable {
 	@Column(name = "start_te", nullable = true)
 	private Date start;
 
-	protected TeamEvent() {
+	protected Route() {
 	}
 
-	public TeamEvent(String name, Date start) {
+	public Route(String name, Date start) {
 		super();
 		this.name = name;
 		this.start = start;

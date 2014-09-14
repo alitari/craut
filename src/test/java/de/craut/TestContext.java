@@ -6,15 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import de.craut.service.TeamEventService;
+import de.craut.service.RouteService;
 
 @Configuration
 @Profile("test")
 public class TestContext {
 
 	@Bean
-	public TeamEventService teamEventService() {
-		return mock(TeamEventService.class);
+	public RouteService routeService() {
+		return mock(RouteService.class);
 	}
 
 }

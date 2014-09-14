@@ -1,7 +1,7 @@
 div('id':'header') { 
 	div('class':'top_banner') {
-		h1() { yield('The Super great Team') }
-		p(){ yield("Hello ${model.name}")}
+		h1() { yield('Route Board') }
+		p(){ yield("District:")}
 	}
 
 	div( 'class':'navigation') {
