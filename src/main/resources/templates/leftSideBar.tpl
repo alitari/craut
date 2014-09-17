@@ -13,7 +13,7 @@ div( 'class':'left_side_bar') {
 	div('class':'col_1') {
 		h1() { yield('Environment')}
 		div('class':'box') {
-			div('class':'map','id':"map-canvas") { }
+//			div('class':'map','id':"map-canvas") { }
 		}
 	}
 }

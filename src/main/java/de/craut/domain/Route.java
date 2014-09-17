@@ -18,14 +18,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Route implements Serializable {
 
 	@Id()
-	@Column(name = "id_te", nullable = false)
+	@Column(name = "rt_id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "name_te", nullable = false)
+	@Column(name = "rt_name", nullable = false)
 	private String name;
 
-	@Column(name = "start_te", nullable = true)
+	@Column(name = "rt_start", nullable = true)
 	private Date start;
 
 	protected Route() {

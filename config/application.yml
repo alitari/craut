@@ -18,9 +18,24 @@ server:
  spring:
     profiles: localmysql
     
- spring.datasource:
+ datasource:
      url: jdbc:mysql://localhost:3306/test?user=root
      username: root
      password: root
      driverClassName: com.mysql.jdbc.Driver
+     
+---
+ 
+ spring:
+    profiles: localpostgres
+    
+    jpa:
+    database: POSTGRESQL
+    
+    datasource:
+     url: jdbc:postgresql://localhost:5432/postgres
+     username: postgres
+     password: acid
+     driverClassName: org.postgresql.Driver
+ 
     

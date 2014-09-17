@@ -293,7 +293,8 @@ a.btn:hover{
 
 
 #map-canvas {
-	height:200px
+	height:200px;
+	width:200px;
 }
 
 
@@ -346,3 +347,10 @@ a.btn:hover{
 }
 
 /*----end footer content----*/
+
+
+/*-------- special ----------*/
+
+.routelist {
+     vertical-align:bottom;
+}

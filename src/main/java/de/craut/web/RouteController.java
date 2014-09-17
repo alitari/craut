@@ -1,5 +1,6 @@
 package de.craut.web;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import de.craut.domain.Route;
+import de.craut.domain.RoutePoint;
 import de.craut.service.RouteService;
 
 @Controller
@@ -24,7 +26,7 @@ public class RouteController {
 	public String init(@RequestParam(value = "name", required = false, defaultValue = "you") String name, Model model) {
 		model.addAttribute("name", name);
 		fillPageContent(model);
-		fillEvents(model);
+		fillRoutes(model);
 		return "routes";
 	}
 
@@ -40,7 +42,7 @@ public class RouteController {
 	public String delete(@RequestParam(value = "id", required = true) Long id, Model model) {
 		fillPageContent(model);
 		routeService.deleteRoute(id);
-		fillEvents(model);
+		fillRoutes(model);
 		return "routes";
 	}
 
@@ -54,31 +56,34 @@ public class RouteController {
 	public String created(@RequestParam(value = "name", required = true) String name, Model model) {
 		fillPageContent(model);
 		routeService.createRoute(name);
-		fillEvents(model);
+		fillRoutes(model);
 		return "routes";
 	}
 
 	@RequestMapping("/edit")
 	public String edit(@RequestParam(value = "id", required = true) Long id, Model model) {
 		fillPageContent(model);
-		Route event = routeService.getRoute(id);
-		model.addAttribute("event", event);
+		Route route = routeService.getRoute(id);
+		model.addAttribute("route", route);
+		model.addAttribute("routePoints", Arrays.asList(new RoutePoint(route, "37.772323", "-122.214897"), new RoutePoint(route, "21.291982", "-157.821856"),
+		        new RoutePoint(route, "-18.142599", "178.431"), new RoutePoint(route, "-27.46758", "153.027892")));
+		model.addAttribute("script", "/routeDetailsScript.tpl");
 		return "route";
 	}
 
 	@RequestMapping("/edited")
 	public String edited(@RequestParam(value = "id", required = true) Long id, @RequestParam(value = "name", required = true) String name, Model model) {
 		fillPageContent(model);
-		Route event = routeService.getRoute(id);
-		event.setName(name);
-		routeService.updateRoute(event);
-		fillEvents(model);
+		Route route = routeService.getRoute(id);
+		route.setName(name);
+		routeService.updateRoute(route);
+		fillRoutes(model);
 		return "routes";
 	}
 
-	private void fillEvents(Model model) {
-		List<Route> events = routeService.getAll();
-		model.addAttribute("events", events);
+	private void fillRoutes(Model model) {
+		List<Route> routes = routeService.getAll();
+		model.addAttribute("routes", routes);
 	}
 
 	// private Route deleteEvent(Long id) {

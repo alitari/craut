@@ -16,8 +16,10 @@ public class Application {
 	public static void main(String[] args) {
 
 		ApplicationContext ctx = SpringApplication.run(Application.class, args);
-		InitDB initDB = ctx.getBean("initDB", InitDB.class);
-		initDB.init(ctx);
+		if (ctx.containsBean("initDB")) {
+			InitDB initDB = ctx.getBean("initDB", InitDB.class);
+			initDB.init(ctx);
+		}
 
 	}
 

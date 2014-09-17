@@ -1,6 +1,7 @@
 yieldUnescaped '<!DOCTYPE html>'                                                    
 html(lang:'en') {                                                                   
-    include template: 'head.tpl' 
+    include template: 'routeDetailsHead.tpl' 
+        
     body {
 		div('id':'wrapper') { 
 			include template: 'header.tpl'
