@@ -24,17 +24,25 @@ public class RoutePoint implements Serializable {
 	@JoinColumn(name = "rp_rt_id", referencedColumnName = "rt_id")
 	private Route route;
 
+	@Column(name = "rp_seq", nullable = false)
+	private int sequence;
+
 	@Column(name = "rp_latitude", nullable = false)
-	private String latitude;
+	private double latitude;
 
 	@Column(name = "rp_longitude", nullable = false)
-	private String longitude;
+	private double longitude;
 
 	protected RoutePoint() {
 	}
 
-	public RoutePoint(Route route, String latitude, String longitude) {
+	public RoutePoint(Route route, int sequence, String latitude, String longitude) {
+		this(route, sequence, Double.parseDouble(latitude), Double.parseDouble(longitude));
+	}
+
+	public RoutePoint(Route route, int sequence, double latitude, double longitude) {
 		super();
+		this.sequence = sequence;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.route = route;
@@ -44,20 +52,59 @@ public class RoutePoint implements Serializable {
 		return id;
 	}
 
-	public String getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
-	public String getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public int getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final RoutePoint other = (RoutePoint) obj;
+		if (Double.doubleToLongBits(this.latitude) != Double.doubleToLongBits(other.latitude)) {
+			return false;
+		}
+		if (Double.doubleToLongBits(this.longitude) != Double.doubleToLongBits(other.longitude)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 31 * hash + (int) (Double.doubleToLongBits(this.latitude) ^ (Double.doubleToLongBits(this.latitude) >>> 32));
+		hash = 31 * hash + (int) (Double.doubleToLongBits(this.longitude) ^ (Double.doubleToLongBits(this.longitude) >>> 32));
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "Point{" + "latitude=" + latitude + ", longitude=" + longitude + '}';
 	}
 
 }

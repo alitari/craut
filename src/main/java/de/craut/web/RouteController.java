@@ -1,6 +1,5 @@
 package de.craut.web;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +62,20 @@ public class RouteController {
 	@RequestMapping("/edit")
 	public String edit(@RequestParam(value = "id", required = true) Long id, Model model) {
 		fillPageContent(model);
-		Route route = routeService.getRoute(id);
-		model.addAttribute("route", route);
-		model.addAttribute("routePoints", Arrays.asList(new RoutePoint(route, "37.772323", "-122.214897"), new RoutePoint(route, "21.291982", "-157.821856"),
-		        new RoutePoint(route, "-18.142599", "178.431"), new RoutePoint(route, "-27.46758", "153.027892")));
-		model.addAttribute("script", "/routeDetailsScript.tpl");
+		fillRoute(model, id);
 		return "route";
+	}
+
+	private void fillRoute(Model model, Long id) {
+		Route route = routeService.getRoute(id);
+
+		List<RoutePoint> routePoints = routeService.getRoutePoints(route);
+
+		model.addAttribute("route", route);
+		model.addAttribute("routePoints", routePoints);
+
+		double calcDistance = routeService.calcDistance(route);
+		model.addAttribute("distance", calcDistance);
 	}
 
 	@RequestMapping("/edited")
@@ -82,23 +89,8 @@ public class RouteController {
 	}
 
 	private void fillRoutes(Model model) {
-		List<Route> routes = routeService.getAll();
+		List<Route> routes = routeService.getAllRoutes();
 		model.addAttribute("routes", routes);
 	}
-
-	// private Route deleteEvent(Long id) {
-	// String url = "http://localhost:8090/events/delete/" + id;
-	// RestTemplate eventRest = new RestTemplate();
-	// Route deletedRoute = eventRest.postForObject(url, null,
-	// Route.class);
-	// return deletedRoute;
-	// }
-
-	// private List<Route> getEventsRest() {
-	// RestTemplate eventRest = new RestTemplate();
-	// List<Route> events = (List<Route>)
-	// eventRest.getForObject("http://localhost:8090/events", List.class);
-	// return events;
-	// }
 
 }

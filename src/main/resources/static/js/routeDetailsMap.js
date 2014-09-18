@@ -1,7 +1,7 @@
 function initialize() {
   var mapOptions = {
-    zoom: 3,
-    center: new google.maps.LatLng(0, -180),
+    zoom: 10,
+    center: flightPlanCoordinates[0],
     mapTypeId: google.maps.MapTypeId.TERRAIN
   };
 

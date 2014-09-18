@@ -33,7 +33,7 @@ public class RouteRestController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public List<Route> getAll() {
-		return routeService.getAll();
+		return routeService.getAllRoutes();
 	}
 
 }
