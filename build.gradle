@@ -21,6 +21,15 @@ apply plugin: 'findbugs'
         
 defaultTasks "clean", "build"        
 
+sourceSets {
+  main {
+    java {
+  		sourceCompatibility = 1.7
+  		targetCompatibility = 1.7
+   	}
+ }
+}
+
 
 test {
 
@@ -91,14 +100,24 @@ dependencies {
     
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
+   
+    compile 'org.apache.commons:commons-lang3:3.0'
+    
+    compile 'commons-collections:commons-collections:3.0'
+    
+    
+    
     runtime "org.hsqldb:hsqldb"
     //runtime "mysql:mysql-connector-java:5.1.31"
     runtime 'org.postgresql:postgresql:9.3-1100-jdbc4'
             
     
     //compile("org.codehaus.groovy:groovy-all")
-    compile "org.codehaus.groovy:groovy"
-    compile "org.codehaus.groovy:groovy-templates"
+    //compile "org.codehaus.groovy:groovy"
+    //compile "org.codehaus.groovy:groovy-templates"
+    
+   
     
     // end::actuator[]
     testCompile("junit:junit")

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title> CRAUT Routes</title>
+<link rel="stylesheet" href="/css/styles.css" type="text/css" />
+<link href="D:\ws\git\craut\src\main\resources\static\css\styles.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!--
+
+//-->
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+</head>
+
+<body>
+    
+	<section th:fragment="content" id="content" class="column-right">
+
+		<article>
+
+			<h3>Routes</h3>
+			<table>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Start</th>
+				</tr>
+				<tr th:each="route : ${routes}">
+					<td th:text="${route.id}">122</td>
+					<td th:text="${route.name}">Kaltenbronn</td>
+					<td th:text="${route.start}">3 days ago</td>
+                </tr>
+			</table>
+
+			<a href="#" class="button button-reversed">Next</a>
+
+
+
+		</article>
+
+
+	</section>
+
+</body>
+</html>

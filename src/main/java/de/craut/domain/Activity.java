@@ -10,21 +10,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "route_activity")
-public class RouteActivity implements Serializable {
+@Table(name = "activity")
+public class Activity implements Serializable {
 
 	@Id()
 	@Column(name = "ra_id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@OneToOne(optional = false)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "ra_rt_id", referencedColumnName = "rt_id")
 	private Route route;
 
@@ -34,12 +34,13 @@ public class RouteActivity implements Serializable {
 	@Column(name = "ra_start", nullable = true)
 	private Date start;
 
-	protected RouteActivity() {
+	protected Activity() {
 	}
 
-	public RouteActivity(String name, Date start) {
+	public Activity(String name, Route route, Date start) {
 		super();
 		this.name = name;
+		this.route = route;
 		this.start = start;
 	}
 
@@ -66,6 +67,14 @@ public class RouteActivity implements Serializable {
 	@JsonIgnore
 	public String getStartFormatted() {
 		return new SimpleDateFormat("hh:mm dd.MM.yyyy").format(start);
+	}
+
+	public Route getRoute() {
+		return route;
+	}
+
+	public void setRoute(Route route) {
+		this.route = route;
 	}
 
 }

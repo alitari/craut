@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>title</title>
+<link href="/css/newstyle.css" rel="stylesheet" type="text/css"/>
+<link href="D:\ws\git\craut\src\main\resources\static\css\newstyle.css" rel="stylesheet" type="text/css"/>
+<link href="https://fonts.googleapis.com/css?family=Anaheim" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<div class="headsection">
+		<table >
+			<tr style="height: 100%">
+				<td  id="logo">
+				   CRAUT
+				</td>
+				<td id="entity">
+				Activities
+				</td>
+				<td  id="entityfilter">
+				   <table >
+						<tr id ="entityfilterheader">
+							<td >Athlete</td>
+							<td >Environment</td>
+							<td >When</td>
+							
+						</tr>
+						<tr id="entityfiltervalue">
+							<td>All</td>
+							<td>Karlsruhe</td>
+							<td>This Week</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<hr/>
+	</div>
+	<div class="middlesection">
+		<table >
+			<tr >
+				<td id="sidebar" valign="top">
+					<div id="upload" align="center"> Upload  </div>
+					<hr/>
+					<div id="menu" align="center"> Menu <hr/> </div>
+					<ul>
+						<li>Routes</li>
+						<li>Activities</li>
+						<li>Challanges</li>
+						<li>Athletes</li>
+					</ul>
+					<br/>
+					<div id="map" align="center"> Map  </div>
+					<hr/>
+				</td>
+				<td id="entitylist" valign="top">
+				   <table>
+						<tr>
+							<td valign="top">
+								<div class="entitylistfont1" > Alitari </div>
+								<div class="entitylistfont2" >Thursday, 21 March 2014 </div>
+							</td>
+							<td valign="top">
+								<div class="entitylistfont1">Kaltenbronn</div>
+								<div class="entitylistfont2">21 km, 570 hm, 134 </div>
+							</td>
+							<td valign="top">
+								<div class="entitylistfont2">Bergzeitfahren Kaltenbronn, 16th</div>
+								<div class="entitylistfont2">3 Berge in 3 Tagen, 3rd</div>
+							</td>
+						</tr>
+					</table>
+
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="footsection">
+		<table>
+			<tr >
+				<td ></td>
+				<td ><div th:include="footer :: copy"></div></td>
+				<td ></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

@@ -48,6 +48,11 @@ public class GPXParser {
 			this.elevation = elevation;
 		}
 
+		@Override
+		public String toString() {
+			return "GpxTrackPoint [latitude=" + latitude + ", longitude=" + longitude + ", elevation=" + elevation + "]";
+		}
+
 	}
 
 	public GPXParser() {

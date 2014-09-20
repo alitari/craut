@@ -45,7 +45,7 @@ public class RoutePoint implements Serializable {
 		this.sequence = sequence;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.route = route;
+		this.setRoute(route);
 	}
 
 	public long getId() {
@@ -106,5 +106,13 @@ public class RoutePoint implements Serializable {
 	public String toString() {
 		return "Point{" + "latitude=" + latitude + ", longitude=" + longitude + '}';
 	}
+
+	public Route getRoute() {
+	    return route;
+    }
+
+	public void setRoute(Route route) {
+	    this.route = route;
+    }
 
 }

@@ -1,15 +1,22 @@
 package de.craut;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import de.craut.domain.ActivityPoint;
+import de.craut.domain.ActivityPointRepository;
+import de.craut.domain.ActivityRepository;
 import de.craut.domain.Route;
+import de.craut.domain.Activity;
 import de.craut.domain.RoutePoint;
 import de.craut.domain.RoutePointRepository;
 import de.craut.domain.RouteRepository;
@@ -22,19 +29,33 @@ public class HsqlSetup {
 
 		@Override
 		public void init(ApplicationContext ctx) {
-			RouteRepository routeRepo = ctx.getBean(RouteRepository.class);
+			RouteRepository routeRepository = ctx.getBean(RouteRepository.class);
 			Route route = new Route("Baden-Baden", new Date());
-			routeRepo.save(route);
+			routeRepository.save(route);
 
 			RoutePoint[] rpoints = createRoutePoints(route);
 
 			List<RoutePoint> rpList = Arrays.asList(rpoints);
+
+			List<ActivityPoint> apList = new ArrayList<ActivityPoint>();
+
+			Date start = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
+			ActivityRepository activityRepository = ctx.getBean(ActivityRepository.class);
+			Activity activity = new Activity("Baden Baden Act", route, start);
+			activityRepository.save(activity);
+
 			for (int i = 0; i < rpList.size(); i++) {
-				rpList.get(i).setSequence(i);
+				RoutePoint routePoint = rpList.get(i);
+				routePoint.setSequence(i);
+				ActivityPoint activityPoint = new ActivityPoint(activity, routePoint, start);
+				start = DateUtils.addSeconds(start, 1);
 			}
 
 			RoutePointRepository routePointRepo = ctx.getBean(RoutePointRepository.class);
 			routePointRepo.save(rpList);
+
+			ActivityPointRepository activityPointRepo = ctx.getBean(ActivityPointRepository.class);
+			activityPointRepo.save(apList);
 
 		}
 

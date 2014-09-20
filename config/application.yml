@@ -1,6 +1,7 @@
 spring:
     mvc.message-codes-resolver.format: PREFIX_ERROR_CODE
-    groovy.template.cache: false
+    thymeleaf.prefix: classpath:/templates/
+    thymeleaf.cache: false
 
 logging:
     file: logfile.txt   
@@ -12,6 +13,7 @@ logging.level:
 
 server:
     port: 8090
+    
     
 ---
  

@@ -219,4 +219,5 @@ public class DistanceTest {
 		assertEquals(richmond.getLongitude(), allegedRichmond.getLongitude(), 10E-5);
 
 	}
+
 }

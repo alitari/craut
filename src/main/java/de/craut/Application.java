@@ -1,8 +1,11 @@
 package de.craut;
 
+import javax.servlet.MultipartConfigElement;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,6 +33,14 @@ public class Application {
 		int port = (portStr != null) ? Integer.parseInt(portStr) : 8090;
 		p.setPort(port); // comm
 		return p;
+	}
+
+	@Bean
+	MultipartConfigElement multipartConfigElement() {
+		MultipartConfigFactory factory = new MultipartConfigFactory();
+		factory.setMaxFileSize("512KB");
+		factory.setMaxRequestSize("512KB");
+		return factory.createMultipartConfig();
 	}
 
 }

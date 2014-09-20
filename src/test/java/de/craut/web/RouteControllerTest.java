@@ -1,8 +1,6 @@
 package de.craut.web;
 
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -50,9 +48,9 @@ public class RouteControllerTest {
 
 	@Test
 	public void routesInit() throws Exception {
-		mockMvc.perform(get("/routes/init")).andExpect(status().isOk()).andExpect(view().name("routes"))
-		        .andExpect(model().attribute("subscriptionContent", is("subscriptionContent...")));
+		mockMvc.perform(get("/routes/list")).andExpect(status().isOk()).andExpect(view().name("routes"));
+		// .andExpect(model().attribute("subscriptionContent",
+		// is("subscriptionContent...")));
 
 	}
-
 }

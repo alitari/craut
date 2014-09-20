@@ -62,4 +62,9 @@ public class Route implements Serializable {
 		return new SimpleDateFormat("hh:mm dd.MM.yyyy").format(start);
 	}
 
+	@Override
+	public String toString() {
+		return "Route [id=" + id + ", name=" + name + "]";
+	}
+
 }
