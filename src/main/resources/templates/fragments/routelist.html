@@ -26,12 +26,12 @@
 				<tr>
 					<th>Id</th>
 					<th>Name</th>
-					<th>Start</th>
+					<th>Created</th>
 				</tr>
 				<tr th:each="route : ${routes}">
-					<td th:text="${route.id}">122</td>
-					<td th:text="${route.name}">Kaltenbronn</td>
-					<td th:text="${route.start}">3 days ago</td>
+					<td> <a th:text="${route.id}" th:href="@{/routes/edit(id=${route.id})}">122</a></td>
+					<td> <a th:text="${route.name}" th:href="@{/routes/edit(id=${route.id})}">Kaltenbronn</a></td>
+					<td> <a th:text="${route.startDay}" th:href="@{/routes/edit(id=${route.id})}">3 days ago</a></td>
                 </tr>
 			</table>
 

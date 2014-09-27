@@ -37,9 +37,9 @@ public class AbstractController {
 
 	private Object createFilterMenu(String page) {
 		List<NavElement> filterMenu = new ArrayList<NavElement>();
-		filterMenu.add(new NavElement("/activities/list", "Name Filter", "All", false));
-		filterMenu.add(new NavElement("/routes/list", "Location Filter", "All", false));
-		filterMenu.add(new NavElement("/challanges/list", "Time Filter", "All Time", true));
+		filterMenu.add(new NavElement("/Help", "Help", false));
+		filterMenu.add(new NavElement("/Contribute", "Contribute", false));
+		filterMenu.add(new NavElement("/User/details", "User", true));
 		return filterMenu;
 	}
 

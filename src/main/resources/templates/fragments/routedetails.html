@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>CRAUT Routes</title>
+<link rel="stylesheet" href="/css/styles.css" type="text/css" />
+<link href="D:\ws\git\craut\src\main\resources\static\css\styles.css" rel="stylesheet" type="text/css" />
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="/js/routeDetailsMap.js"></script>
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!--
+
+//-->
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+</head>
+
+<body>
+
+	<section th:fragment="content" id="content" class="column-right">
+
+		<script th:inline="javascript">
+         /*<![CDATA[*/
+         
+        	var flightPlanCoordinates = [new google.maps.LatLng( -34.397, 150.644),new google.maps.LatLng( -24.397, 144.644)];
+        	
+        	var routePoints = /*[[${routePoints}]]*/;
+
+            
+         
+        for (var i = 0; i < routePoints.length; i+=2) { 
+          flightPlanCoordinates[i/2] = new google.maps.LatLng( routePoints[i] , routePoints[i+1]) 
+        } 
+
+        	google.maps.event.addDomListener(window, 'load', initialize);
+        /*]]>*/
+		</script>
+
+		<article>
+			<h3 th:text="${route}">Route (id:23) Details</h3>
+			<table>
+				<tr>
+					<td>
+						<fieldset>
+
+							<legend>Basic</legend>
+							<form action="edited" method="get">
+								<p>
+									<label for="name">Name:</label> <input th:value="${route.name}" type="text" name="name" id="name" />
+								</p>
+								<p>
+									<label for="start">Start Time:</label> <input th:value="${route.start}" disabled="disabled" type="text" name="start" id="start" />
+								</p>
+								<input type="hidden" name="id" th:value="${route.id}"/>
+								<p><input type="submit" name="send" class="formbutton" value="Update" /></p>
+							</form>
+
+						</fieldset>
+					</td>
+					<td valign="top">
+						<fieldset>
+
+							<legend>Details</legend>
+							<form action="#" method="get">
+								<p>
+									<label for="points">Points count:</label> <input  th:value="${#lists.size(routePoints) }" disabled="disabled" type="text" name="points" id="points" />
+								</p>
+								<p>
+									<label for="distance">Distance:</label> <input th:value="${distance}" disabled="disabled" type="text" name="distance" id="distance" />
+								</p>
+							</form>
+
+						</fieldset>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<fieldset>
+							<legend>Map</legend>
+							<div id="map-canvas" style=" height:100px"></div>	
+							
+						</fieldset>
+					</td>
+				</tr>
+			</table>
+
+		</article>
+
+
+	</section>
+
+</body>
+</html>

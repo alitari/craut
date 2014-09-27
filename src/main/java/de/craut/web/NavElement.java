@@ -14,6 +14,10 @@ public class NavElement {
 		this(href, text, null, true);
 	}
 
+	public NavElement(String href, String text, boolean selected) {
+		this(href, text, null, selected);
+	}
+
 	public NavElement(String href, String text, String value, boolean selected) {
 		super();
 		this.href = href;

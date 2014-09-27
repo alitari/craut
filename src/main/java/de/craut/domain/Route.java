@@ -1,7 +1,6 @@
 package de.craut.domain;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import de.craut.util.AdvancedDateFormat;
 
 @Entity
 @Table(name = "route")
@@ -58,8 +59,8 @@ public class Route implements Serializable {
 	}
 
 	@JsonIgnore
-	public String getStartFormatted() {
-		return new SimpleDateFormat("hh:mm dd.MM.yyyy").format(start);
+	public String getStartDay() {
+		return AdvancedDateFormat.day(start);
 	}
 
 	@Override

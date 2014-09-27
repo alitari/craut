@@ -3,9 +3,9 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title> CRAUT Routes</title>
+<title>CRAUT Routes</title>
 <link rel="stylesheet" href="/css/styles.css" type="text/css" />
-<link href="D:\ws\git\craut\src\main\resources\static\css\styles.css" rel="stylesheet" type="text/css"/>
+<link href="D:\ws\git\craut\src\main\resources\static\css\styles.css" rel="stylesheet" type="text/css" />
 <!--[if lt IE 9]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
@@ -16,18 +16,21 @@
 </head>
 
 <body>
-		<div th:fragment="header" id="sitename">
-			<div class="width">
-				<h1>
-					<a href="#"> CRAUT</a>
-				</h1>
-				<nav>
-					<ul>
-        					<li th:each="nav,iterStat : ${menuHeader}"  th:class=" (${nav.selected}? 'selected':'') + ' '+ (${iterStat.first} ? 'start':'') +' '+ (${iterStat.last} ? 'end':'')" ><a th:href="${nav.href}" th:text="${nav.text}+':'+${nav.value}"></a></li>
-        			</ul>
-        		</nav>
-				<div class="clear"></div>
-			</div>
+	<div th:fragment="header" id="sitename">
+		<div class="width">
+			<h1>
+				<a href="#"> CRAUT</a>
+			</h1>
+			<nav>
+				<ul>
+					<li th:each="nav,iterStat : ${menuHeader}"
+						th:class=" (${nav.selected}? 'selected':'') + ' '+ (${iterStat.first} ? 'start':'') +' '+ (${iterStat.last} ? 'end':'')">
+						<a th:href="${nav.href}" th:text="${nav.text}"></a>
+					</li>
+				</ul>
+			</nav>
+			<div class="clear"></div>
 		</div>
+	</div>
 </body>
 </html>

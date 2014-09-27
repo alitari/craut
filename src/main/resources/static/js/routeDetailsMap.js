@@ -2,7 +2,7 @@ function initialize() {
   var mapOptions = {
     zoom: 10,
     center: flightPlanCoordinates[0],
-    mapTypeId: google.maps.MapTypeId.TERRAIN
+    
   };
 
   var map = new google.maps.Map(document.getElementById('map-canvas'),

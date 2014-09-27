@@ -1,5 +1,7 @@
 package de.craut.web;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -86,10 +88,19 @@ public class RouteController extends AbstractController {
 		List<RoutePoint> routePoints = routeService.getRoutePoints(route);
 
 		model.addAttribute("route", route);
-		model.addAttribute("routePoints", routePoints);
+		List<Double> routePointsLatLng = fillLatLng(routePoints);
+		model.addAttribute("routePoints", routePointsLatLng);
 
 		double calcDistance = routeService.calcDistance(route);
-		model.addAttribute("distance", calcDistance);
+		model.addAttribute("distance", new DecimalFormat("###,##").format(calcDistance));
 	}
 
+	private List<Double> fillLatLng(List<RoutePoint> routePoints) {
+		List<Double> latLngs = new ArrayList<Double>();
+		for (RoutePoint routePoint : routePoints) {
+			latLngs.add(routePoint.getLatitude());
+			latLngs.add(routePoint.getLongitude());
+		}
+		return latLngs;
+	}
 }
