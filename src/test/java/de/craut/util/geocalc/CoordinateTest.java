@@ -20,8 +20,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import de.craut.domain.RoutePoint;
+import org.springframework.data.geo.Point;
 
 @RunWith(JUnit4.class)
 /**
@@ -110,55 +109,55 @@ public class CoordinateTest {
 
 	@Test
 	public void testIsContainedWithin() {
-		RoutePoint northEast = new RoutePoint(null, 0, 70, 145);
-		RoutePoint southWest = new RoutePoint(null, 0, 50, 110);
+		Point northEast = new Point(70, 145);
+		Point southWest = new Point(50, 110);
 		BoundingArea boundingArea = new BoundingArea(northEast, southWest);
 
-		RoutePoint point1 = new RoutePoint(null, 0, 60, 120);
+		Point point1 = new Point(60, 120);
 		assertTrue(boundingArea.isContainedWithin(point1));
 
-		RoutePoint point2 = new RoutePoint(null, 0, 45, 120);
+		Point point2 = new Point(45, 120);
 		assertFalse(boundingArea.isContainedWithin(point2));
 
-		RoutePoint point3 = new RoutePoint(null, 0, 85, 120);
+		Point point3 = new Point(85, 120);
 		assertFalse(boundingArea.isContainedWithin(point3));
 
-		RoutePoint point4 = new RoutePoint(null, 0, 60, 100);
+		Point point4 = new Point(60, 100);
 		assertFalse(boundingArea.isContainedWithin(point4));
 
-		RoutePoint point5 = new RoutePoint(null, 0, 60, 150);
+		Point point5 = new Point(60, 150);
 		assertFalse(boundingArea.isContainedWithin(point5));
 
-		RoutePoint point6 = new RoutePoint(null, 0, 80, 150);
+		Point point6 = new Point(80, 150);
 		assertFalse(boundingArea.isContainedWithin(point5));
 
-		RoutePoint point7 = new RoutePoint(null, 0, 35, 100);
+		Point point7 = new Point(35, 100);
 		assertFalse(boundingArea.isContainedWithin(point7));
 
-		northEast = new RoutePoint(null, 0, 10, 45);
-		southWest = new RoutePoint(null, 0, -30, -35);
+		northEast = new Point(10, 45);
+		southWest = new Point(-30, -35);
 		boundingArea = new BoundingArea(northEast, southWest);
 
-		RoutePoint point8 = new RoutePoint(null, 0, 0, 0);
+		Point point8 = new Point(0, 0);
 		assertTrue(boundingArea.isContainedWithin(point8));
 
-		RoutePoint point9 = new RoutePoint(null, 0, -5, -30);
+		Point point9 = new Point(-5, -30);
 		assertTrue(boundingArea.isContainedWithin(point9));
 
-		RoutePoint point10 = new RoutePoint(null, 0, 5, 30);
+		Point point10 = new Point(5, 30);
 		assertTrue(boundingArea.isContainedWithin(point10));
 
-		RoutePoint point11 = new RoutePoint(null, 0, -35, 30);
+		Point point11 = new Point(-35, 30);
 		assertFalse(boundingArea.isContainedWithin(point11));
 
-		northEast = new RoutePoint(null, 0, 10, -165);
-		southWest = new RoutePoint(null, 0, -30, 170);
+		northEast = new Point(10, -165);
+		southWest = new Point(-30, 170);
 		boundingArea = new BoundingArea(northEast, southWest);
 
-		RoutePoint point12 = new RoutePoint(null, 0, 0, 180);
+		Point point12 = new Point(0, 180);
 		assertTrue(boundingArea.isContainedWithin(point12));
 
-		RoutePoint point13 = new RoutePoint(null, 0, 0, -179);
+		Point point13 = new Point(0, -179);
 		assertTrue(boundingArea.isContainedWithin(point13));
 	}
 }

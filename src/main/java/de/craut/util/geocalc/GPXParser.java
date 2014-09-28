@@ -16,7 +16,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.data.geo.Point;
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -34,23 +36,27 @@ public class GPXParser {
 	private SAXParser saxParser;
 	private List<GpxTrackPoint> trackPoints;
 
-	public static class GpxTrackPoint {
-		public final double latitude;
-		public final double longitude;
+	public static class GpxTrackPoint extends Point {
 		public final Calendar time;
 		public int elevation;
 
 		public GpxTrackPoint(double latitude, double longitude, Calendar time, int elevation) {
-			super();
-			this.latitude = latitude;
-			this.longitude = longitude;
+			super(latitude, longitude);
 			this.time = time;
 			this.elevation = elevation;
 		}
 
+		public double getLatitude() {
+			return getX();
+		}
+
+		public double getLongitude() {
+			return getY();
+		}
+
 		@Override
 		public String toString() {
-			return "GpxTrackPoint [latitude=" + latitude + ", longitude=" + longitude + ", elevation=" + elevation + "]";
+			return "GpxTrackPoint [latitude=" + getX() + ", longitude=" + getY() + ", elevation=" + elevation + "]";
 		}
 
 	}
@@ -96,10 +102,12 @@ public class GPXParser {
 		String timeStr = "";
 		String elevation = "";
 
+		@Override
 		public void startDocument() throws SAXException {
 
 		}
 
+		@Override
 		public void endDocument() throws SAXException {
 
 		}
@@ -131,7 +139,8 @@ public class GPXParser {
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			if (localName.equals("trkpt")) {
 				Calendar time = parseTime(timeStr);
-				GpxTrackPoint routePoint = new GpxTrackPoint(Double.parseDouble(latitude), Double.parseDouble(longitude), time, Integer.parseInt(elevation));
+				GpxTrackPoint routePoint = new GpxTrackPoint(Double.parseDouble(latitude), Double.parseDouble(longitude), time,
+				        StringUtils.isNumeric(elevation) ? Integer.parseInt(elevation) : 0);
 				trackPoints.add(routePoint);
 			}
 		}
@@ -154,15 +163,18 @@ public class GPXParser {
 			return info;
 		}
 
+		@Override
 		public void warning(SAXParseException spe) throws SAXException {
 			System.out.println("Warning: " + getParseExceptionInfo(spe));
 		}
 
+		@Override
 		public void error(SAXParseException spe) throws SAXException {
 			String message = "Error: " + getParseExceptionInfo(spe);
 			throw new SAXException(message);
 		}
 
+		@Override
 		public void fatalError(SAXParseException spe) throws SAXException {
 			String message = "Fatal Error: " + getParseExceptionInfo(spe);
 			throw new SAXException(message);
@@ -179,6 +191,9 @@ public class GPXParser {
 	}
 
 	Calendar parseTime(String dateStr) {
+		if (StringUtils.isEmpty(dateStr)) {
+			return null;
+		}
 		Date parse;
 		try {
 			parse = dateFormat.parse(dateStr);

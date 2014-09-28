@@ -23,7 +23,7 @@ public class RouteRestController {
 
 	@RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
 	public Route getEvent(@PathVariable Long eventId) {
-		return routeService.getRoute(eventId);
+		return routeService.fetchRoute(eventId);
 	}
 
 	@RequestMapping(value = "/delete/{eventId}", method = RequestMethod.POST)
@@ -33,7 +33,7 @@ public class RouteRestController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public List<Route> getAll() {
-		return routeService.getAllRoutes();
+		return routeService.fetchAllRoutes();
 	}
 
 }

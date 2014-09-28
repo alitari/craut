@@ -12,6 +12,9 @@
     <appender-ref ref="STDOUT" />
   </root>
   
+   <logger name="de.craut" level="debug" />
+  
+  
   
   
 </configuration>

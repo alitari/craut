@@ -21,7 +21,8 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
-import de.craut.domain.RoutePoint;
+
+import org.springframework.data.geo.Point;
 
 public class EarthCalc {
 
@@ -36,8 +37,8 @@ public class EarthCalc {
 	 *            The fore point
 	 * @return The distance, in meters
 	 */
-	public static double getDistance(RoutePoint standPoint, RoutePoint forePoint) {
-		return getDistance(standPoint.getLatitude(), standPoint.getLongitude(), forePoint.getLatitude(), forePoint.getLongitude());
+	public static double getDistance(Point standPoint, Point forePoint) {
+		return getDistance(standPoint.getX(), standPoint.getY(), forePoint.getX(), forePoint.getY());
 
 	}
 
@@ -69,10 +70,10 @@ public class EarthCalc {
 	 *      ://stackoverflow.com/questions/877524/calculating-coordinates-given
 	 *      -a-bearing-and-a-distance
 	 */
-	public static RoutePoint pointRadialDistance(RoutePoint standPoint, double bearing, double distance) {
+	public static Point pointRadialDistance(Point standPoint, double bearing, double distance) {
 
-		double rlat1 = toRadians(standPoint.getLatitude());
-		double rlon1 = toRadians(standPoint.getLongitude());
+		double rlat1 = toRadians(standPoint.getX());
+		double rlon1 = toRadians(standPoint.getY());
 		double rbearing = toRadians(bearing);
 		double rdistance = distance / EARTH_DIAMETER; // normalize linear
 		                                              // distance to radian
@@ -90,7 +91,7 @@ public class EarthCalc {
 			rlon = ((rlon1 - asin(sin(rbearing) * sin(rdistance) / cos(rlat)) + PI) % (2 * PI)) - PI;
 		}
 
-		return new RoutePoint(null, 0, new RadianCoordinate(rlat).getValue(), new RadianCoordinate(rlon).getValue());
+		return new Point(new RadianCoordinate(rlat).getValue(), new RadianCoordinate(rlon).getValue());
 	}
 
 	/**
@@ -100,12 +101,12 @@ public class EarthCalc {
 	 * @param forePoint
 	 * @return bearing, in decimal degrees
 	 */
-	public static double getBearing(RoutePoint standPoint, RoutePoint forePoint) {
-		double latitude1 = toRadians(standPoint.getLatitude());
-		double longitude1 = standPoint.getLongitude();
+	public static double getBearing(Point standPoint, Point forePoint) {
+		double latitude1 = toRadians(standPoint.getX());
+		double longitude1 = standPoint.getY();
 
-		double latitude2 = toRadians(forePoint.getLatitude());
-		double longitude2 = forePoint.getLongitude();
+		double latitude2 = toRadians(forePoint.getX());
+		double longitude2 = forePoint.getY();
 
 		double longDiff = toRadians(longitude2 - longitude1);
 
@@ -129,13 +130,13 @@ public class EarthCalc {
 	 * @return The area
 	 * @see http://www.movable-type.co.uk/scripts/latlong.html
 	 */
-	public static BoundingArea getBoundingArea(RoutePoint standPoint, double distance) {
+	public static BoundingArea getBoundingArea(Point standPoint, double distance) {
 
 		// 45 degrees is going north-west
-		RoutePoint northWest = pointRadialDistance(standPoint, 45, distance);
+		Point northWest = pointRadialDistance(standPoint, 45, distance);
 
 		// 225 degrees is going south-east
-		RoutePoint southEast = pointRadialDistance(standPoint, 225, distance);
+		Point southEast = pointRadialDistance(standPoint, 225, distance);
 
 		return new BoundingArea(northWest, southEast);
 	}

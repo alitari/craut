@@ -3,104 +3,34 @@ package de.craut.service;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.data.geo.Point;
 
-import de.craut.domain.Activity;
-import de.craut.domain.ActivityPoint;
+import de.craut.domain.ActivityRepository;
 import de.craut.domain.FileUpload;
 import de.craut.domain.FileUploadRepository;
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
 import de.craut.domain.RoutePointRepository;
 import de.craut.domain.RouteRepository;
-import de.craut.service.RouteService.GpxStatistics;
-import de.craut.util.geocalc.EarthCalc;
-import de.craut.util.geocalc.GPXParser;
-import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
-public class RouteServiceTest {
+public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteService> {
 
 	private static final long ID1 = 353;
 	private static final String NAME1 = "Route1";
-	RouteService underTest;
-	private List<Route> allRoutes;
-	private RouteRepository routeRepository;
-	private RoutePointRepository routePointRepository;
-	private FileUploadRepository fileUploadRepository;
-
-	private final static double latitudeMeter = 0.000009;
-	private final static double longitudeMeter = 0.000014;
-	private double startLatitude;
-	private double startLongitude;
-	private double endLatitude;
-	private double endLongitude;
-
-	@Before
-	public void setup() {
-
-		startLatitude = 48.796108;
-		startLongitude = 8.202952;
-		endLatitude = 48.800747;
-		endLongitude = 8.212094;
-
-		allRoutes = new ArrayList<Route>();
-		routeRepository = mock(RouteRepository.class);
-		routePointRepository = mock(RoutePointRepository.class);
-		fileUploadRepository = mock(FileUploadRepository.class);
-
-		when(routeRepository.findAll()).thenReturn(allRoutes);
-
-		underTest = new RouteService(routeRepository, routePointRepository, fileUploadRepository);
-	}
-
-	private List<GpxTrackPoint> gpxFromFile(String resourcePath) {
-		InputStream gpxIs = getClass().getResourceAsStream(resourcePath); //
-
-		GPXParser gpxParser = new GPXParser();
-		List<GpxTrackPoint> gpxPoints = gpxParser.parse(gpxIs);
-		return gpxPoints;
-	}
-
-	private Route setupRoute(long id, String name, double... points) {
-		Route route = new Route(name, new Date());
-		allRoutes.add(route);
-		when(routeRepository.findOne(id)).thenReturn(route);
-		List<RoutePoint> routePoints = new ArrayList<RoutePoint>();
-		int i = 0;
-		while (i < points.length) {
-			routePoints.add(new RoutePoint(route, i / 2, points[i], points[i + 1]));
-			i += 2;
-		}
-		when(routePointRepository.findByRoute(route)).thenReturn(routePoints);
-		return route;
-
-	}
-
-	@Test
-	public void create() {
-		setupRoute(ID1, NAME1);
-		String name = "Testname";
-		underTest.createRoute(name);
-		verify(routeRepository, times(1)).save(any(Route.class));
-	}
 
 	@Test
 	public void delete() {
@@ -113,7 +43,7 @@ public class RouteServiceTest {
 	@Test
 	public void getRoute() {
 		setupRoute(ID1, NAME1);
-		Route route = underTest.getRoute(ID1);
+		Route route = underTest.fetchRoute(ID1);
 		assertThat(route, is(allRoutes.get(0)));
 		verify(routeRepository, times(1)).findOne(ID1);
 	}
@@ -129,15 +59,43 @@ public class RouteServiceTest {
 	@Test
 	public void getAllRoutes() {
 		setupRoute(ID1, NAME1);
-		underTest.getAllRoutes();
+		underTest.fetchAllRoutes();
 		verify(routeRepository, times(1)).findAll();
 	}
 
 	@Test
 	public void getRoutePoints() {
 		setupRoute(ID1, NAME1);
-		underTest.getRoutePoints(allRoutes.get(0));
+		underTest.fetchRoutePoints(allRoutes.get(0));
 		verify(routePointRepository, times(1)).findByRoute(allRoutes.get(0));
+	}
+
+	@Test
+	public void saveRoute() {
+
+		List<Point> points = Arrays.asList(new Point[] { new Point(3, 4), new Point(3.4844, 4.9545) });
+		underTest.saveRoute("testRoute", points);
+		ArgumentCaptor<Route> routeCapture = ArgumentCaptor.forClass(Route.class);
+
+		verify(routeRepository, times(1)).save(routeCapture.capture());
+		Route routeArgument = routeCapture.getValue();
+		assertThat(routeArgument.getName(), is("testRoute"));
+		assertThat(routeArgument.getStartLatitude(), is(points.get(0).getX()));
+		assertThat(routeArgument.getStartLongitude(), is(points.get(0).getY()));
+		assertThat(routeArgument.getEndLatitude(), is(points.get(points.size() - 1).getX()));
+		assertThat(routeArgument.getEndLongitude(), is(points.get(points.size() - 1).getY()));
+
+		ArgumentCaptor<Iterable> routePointsCapture = ArgumentCaptor.forClass(Iterable.class);
+		verify(routePointRepository, times(1)).save(routePointsCapture.capture());
+		Iterator iterator = routePointsCapture.getValue().iterator();
+		RoutePoint rp = ((RoutePoint) iterator.next());
+		assertThat(rp.getX(), is(points.get(0).getX()));
+		assertThat(rp.getY(), is(points.get(0).getY()));
+
+		rp = ((RoutePoint) iterator.next());
+		assertThat(rp.getX(), is(points.get(points.size() - 1).getX()));
+		assertThat(rp.getY(), is(points.get(points.size() - 1).getY()));
+
 	}
 
 	@Test
@@ -166,128 +124,10 @@ public class RouteServiceTest {
 		assertThat(DateUtils.getFragmentInSeconds(dateCaptor.getValue(), Calendar.DAY_OF_MONTH), is((long) 0));
 	}
 
-	@Test
-	public void activityPointsMatch1() throws Exception {
-
-		Route route = setupRoute(1, "route1", startLatitude, startLongitude, endLatitude, endLongitude);
-
-		List<GpxTrackPoint> trackPoints = Arrays.asList(new GpxTrackPoint[] {
-		        new GpxTrackPoint(startLatitude + latitudeMeter, startLongitude + longitudeMeter, createToday(1), 0),
-		        new GpxTrackPoint(startLatitude + 15 * latitudeMeter, startLongitude + 11 * longitudeMeter, createToday(8), 0),
-		        new GpxTrackPoint(endLatitude - 2 * latitudeMeter, endLongitude - 2 * longitudeMeter, createToday(30 * 60), 0) });
-
-		List<ActivityPoint> pointList = underTest.createActivityPoints(trackPoints, route, 5);
-
-		List<RoutePoint> routePoints = underTest.getRoutePoints(route);
-		assertThat(pointList.size(), is(routePoints.size()));
-
-		checkActivityPoint(pointList.get(0), routePoints.get(0), 0, trackPoints.get(0));
-		checkActivityPoint(pointList.get(1), routePoints.get(1), 1, trackPoints.get(2));
+	@Override
+	protected RouteService createService(ActivityRepository activityRepository, RouteRepository routeRepository, RoutePointRepository routePointRepository,
+	        FileUploadRepository fileUploadRepository) {
+		return new RouteService(routeRepository, routePointRepository, fileUploadRepository);
 	}
 
-	@Test
-	public void routeMatch1() throws Exception {
-
-		Route route = setupRoute(1, "route1", startLatitude, startLongitude, endLatitude, endLongitude);
-
-		List<GpxTrackPoint> trackPoints = Arrays.asList(new GpxTrackPoint[] {
-		        new GpxTrackPoint(startLatitude + latitudeMeter, startLongitude + longitudeMeter, createToday(1), 0),
-		        new GpxTrackPoint(startLatitude + 15 * latitudeMeter, startLongitude + 11 * longitudeMeter, createToday(8), 0),
-		        new GpxTrackPoint(endLatitude - 2 * latitudeMeter, endLongitude - 2 * longitudeMeter, createToday(30 * 60), 0) });
-
-		Map<Activity, List<ActivityPoint>> activities = underTest.createActivities(trackPoints);
-		List<RoutePoint> routePoints = underTest.getRoutePoints(route);
-
-		assertThat(activities.size(), is(1));
-		Entry<Activity, List<ActivityPoint>> activityEntry = activities.entrySet().iterator().next();
-		Activity activity = activityEntry.getKey();
-		assertThat(activity.getRoute(), is(route));
-		List<ActivityPoint> pointList = activityEntry.getValue();
-		assertThat(pointList.size(), is(routePoints.size()));
-
-		checkActivityPoint(pointList.get(0), routePoints.get(0), 0, trackPoints.get(0));
-		checkActivityPoint(pointList.get(1), routePoints.get(1), 1, trackPoints.get(2));
-
-	}
-
-	@Test
-	public void activityPointsMatchFromFile1() throws Exception {
-		List<GpxTrackPoint> trackPoints = gpxFromFile("/gpx/test2.gpx");
-		Route route = setupRoute(1, "route1", startLatitude, startLongitude, endLatitude, endLongitude);
-
-		List<ActivityPoint> pointList = underTest.createActivityPoints(trackPoints, route, 5);
-
-		List<RoutePoint> routePoints = underTest.getRoutePoints(route);
-		assertThat(pointList.size(), is(routePoints.size()));
-
-		checkActivityPoint(pointList.get(0), routePoints.get(0), 0, trackPoints.get(289));
-		checkActivityPoint(pointList.get(1), routePoints.get(1), 1, trackPoints.get(384));
-
-	}
-
-	@Test
-	public void getStatistics() throws Exception {
-		GpxStatistics statistics = underTest.getStatistics(gpxFromFile("/gpx/test2.gpx"));
-		assertThat(statistics.minDistance, is(4.828659858923302));
-		assertThat(statistics.maxDistance, is(11.125689133761142));
-
-	}
-
-	private void checkActivityPoint(ActivityPoint activityPoint, RoutePoint routePoint, int seq, GpxTrackPoint trkPoint) {
-		assertThat(activityPoint.getActivity().getRoute(), is(routePoint.getRoute()));
-		assertThat(activityPoint.getRoutePoint(), is(routePoint));
-		assertThat(activityPoint.getTime(), is(trkPoint.time.getTime()));
-	}
-
-	@Test
-	public void activityPointsNoMatch1() throws Exception {
-
-		setupRoute(1, "route1", startLatitude, startLongitude, endLatitude, endLongitude);
-
-		List<GpxTrackPoint> trackPoints = Arrays.asList(new GpxTrackPoint[] {
-		        new GpxTrackPoint(startLatitude + latitudeMeter, startLongitude + longitudeMeter, createToday(1), 0),
-		        new GpxTrackPoint(startLatitude + 15 * latitudeMeter, startLongitude + 11 * longitudeMeter, createToday(8), 0),
-		        new GpxTrackPoint(endLatitude - 6 * latitudeMeter, endLongitude - 5 * longitudeMeter, createToday(30 * 60), 0) });
-
-		Route route = allRoutes.get(0);
-		List<ActivityPoint> pointList = underTest.createActivityPoints(trackPoints, route, 5);
-
-		assertThat(pointList.size(), is(0));
-
-	}
-
-	private Calendar createToday(long s) {
-		Calendar calendar = GregorianCalendar.getInstance();
-		calendar.setTime(new Date());
-		calendar.set(Calendar.HOUR, (int) s / 3600);
-		calendar.set(Calendar.MINUTE, (int) (s / 60) % 60);
-		calendar.set(Calendar.SECOND, (int) s % 60);
-		return calendar;
-	}
-
-	@Test
-	public void distances() throws Exception {
-		RoutePoint point1 = new RoutePoint(null, 0, "48", "8");
-		RoutePoint point2 = new RoutePoint(null, 0, "49", "8");
-		double distance = EarthCalc.getDistance(point1, point2);
-		assertThat((int) (distance / 1000), is(111));
-
-		point1 = new RoutePoint(null, 0, "48", "8");
-		point2 = new RoutePoint(null, 0, "48", "9");
-		distance = EarthCalc.getDistance(point1, point2);
-		assertThat((int) (distance / 1000), is(74));
-
-		// 1m latitude
-		point1 = new RoutePoint(null, 0, "48", "8");
-		point2 = new RoutePoint(null, 0, "48.000009", "8");
-		distance = EarthCalc.getDistance(point1, point2);
-		assertThat(distance, is((double) 1.0002069982284665));
-
-		// 1m longitude
-		point1 = new RoutePoint(null, 0, "48", "8");
-		point2 = new RoutePoint(null, 0, "48", "8.000014");
-		distance = EarthCalc.getDistance(point1, point2);
-		assertThat(distance, is((double) 1.0399657163295126));
-
-	}
 }

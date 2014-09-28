@@ -1,5 +1,6 @@
 package de.craut;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -12,14 +13,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import de.craut.domain.Activity;
 import de.craut.domain.ActivityPoint;
 import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
 import de.craut.domain.Route;
-import de.craut.domain.Activity;
 import de.craut.domain.RoutePoint;
 import de.craut.domain.RoutePointRepository;
 import de.craut.domain.RouteRepository;
+import de.craut.service.RouteService;
+import de.craut.util.geocalc.GPXParser;
+import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
 @Configuration
 @Profile("hsql")
@@ -31,9 +35,16 @@ public class HsqlSetup {
 		public void init(ApplicationContext ctx) {
 			RouteRepository routeRepository = ctx.getBean(RouteRepository.class);
 			Route route = new Route("Baden-Baden", new Date());
-			routeRepository.save(route);
 
 			RoutePoint[] rpoints = createRoutePoints(route);
+
+			route.setStartLatitude(rpoints[0].getLatitude());
+			route.setStartLongitude(rpoints[0].getLongitude());
+
+			route.setEndLatitude(rpoints[rpoints.length - 1].getLatitude());
+			route.setEndLongitude(rpoints[rpoints.length - 1].getLongitude());
+
+			routeRepository.save(route);
 
 			List<RoutePoint> rpList = Arrays.asList(rpoints);
 
@@ -57,6 +68,17 @@ public class HsqlSetup {
 			ActivityPointRepository activityPointRepo = ctx.getBean(ActivityPointRepository.class);
 			activityPointRepo.save(apList);
 
+			saveRoute(ctx, "Malsch-Freiolsheim.gpx");
+			saveRoute(ctx, "RoteLache.gpx");
+
+		}
+
+		private void saveRoute(ApplicationContext ctx, String gpxFileName) {
+			InputStream gpxIs = getClass().getResourceAsStream("/gpx/" + gpxFileName);
+			GPXParser gpxParser = new GPXParser();
+			List<GpxTrackPoint> points = gpxParser.parse(gpxIs);
+			RouteService routeService = ctx.getBean(RouteService.class);
+			routeService.saveRoute(gpxFileName, points);
 		}
 
 		private RoutePoint[] createRoutePoints(Route route) {

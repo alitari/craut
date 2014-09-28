@@ -1,6 +1,5 @@
 package de.craut.web;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
+import de.craut.util.geocalc.GpxPointStatistics;
+import de.craut.util.geocalc.GpxUtils;
 
 @Controller
 @RequestMapping("/routes")
@@ -30,7 +31,7 @@ public class RouteController extends AbstractController {
 	private void fillPageContent(Model model) {
 		fillPageContent(model, "routes");
 
-		List<Route> routes = routeService.getAllRoutes();
+		List<Route> routes = routeService.fetchAllRoutes();
 		model.addAttribute("routes", routes);
 	}
 
@@ -47,13 +48,6 @@ public class RouteController extends AbstractController {
 		return "route";
 	}
 
-	@RequestMapping("/created")
-	public String created(@RequestParam(value = "name", required = true) String name, Model model) {
-		routeService.createRoute(name);
-		fillPageContent(model);
-		return "routes";
-	}
-
 	@RequestMapping("/edit")
 	public String edit(@RequestParam(value = "id", required = true) Long id, Model model) {
 		fillPageContent(model);
@@ -63,7 +57,7 @@ public class RouteController extends AbstractController {
 
 	@RequestMapping("/edited")
 	public String edited(@RequestParam(value = "id", required = true) Long id, @RequestParam(value = "name", required = true) String name, Model model) {
-		Route route = routeService.getRoute(id);
+		Route route = routeService.fetchRoute(id);
 		route.setName(name);
 		routeService.updateRoute(route);
 		fillPageContent(model);
@@ -83,16 +77,16 @@ public class RouteController extends AbstractController {
 	}
 
 	private void fillRoute(Model model, Long id) {
-		Route route = routeService.getRoute(id);
+		Route route = routeService.fetchRoute(id);
 
-		List<RoutePoint> routePoints = routeService.getRoutePoints(route);
+		List<RoutePoint> routePoints = routeService.fetchRoutePoints(route);
+		GpxPointStatistics gpxStatistics = GpxUtils.getStatistics(routePoints);
+		model.addAttribute("gpxStatistics", gpxStatistics);
 
 		model.addAttribute("route", route);
 		List<Double> routePointsLatLng = fillLatLng(routePoints);
 		model.addAttribute("routePoints", routePointsLatLng);
 
-		double calcDistance = routeService.calcDistance(route);
-		model.addAttribute("distance", new DecimalFormat("###,##").format(calcDistance));
 	}
 
 	private List<Double> fillLatLng(List<RoutePoint> routePoints) {

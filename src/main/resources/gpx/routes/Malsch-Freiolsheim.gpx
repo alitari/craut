@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx creator="StravaGPX" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd">
+ <metadata>
+  <name>Malsch-Freiolsheim</name>
+  <author>
+   <name>Alexander Krieg</name>
+   <link href="http://www.strava.com/athletes/1288905"/>
+  </author>
+  <link href="http://www.strava.com/routes/1000224"/>
+ </metadata>
+ <trk>
+  <name>Malsch-Freiolsheim</name>
+  <link href="http://www.strava.com/routes/1000224"/>
+  <type>Radfahrt</type>
+  <trkseg>
+   <trkpt lat="48.87758" lon="8.34046"/>
+   <trkpt lat="48.87724" lon="8.34149"/>
+   <trkpt lat="48.877050000000004" lon="8.342020000000002"/>
+   <trkpt lat="48.876900000000006" lon="8.3423"/>
+   <trkpt lat="48.876780000000004" lon="8.34248"/>
+   <trkpt lat="48.876650000000005" lon="8.34257"/>
+   <trkpt lat="48.876540000000006" lon="8.342590000000001"/>
+   <trkpt lat="48.87642" lon="8.34256"/>
+   <trkpt lat="48.87624" lon="8.342400000000001"/>
+   <trkpt lat="48.875840000000004" lon="8.34195"/>
+   <trkpt lat="48.875370000000004" lon="8.341520000000001"/>
+   <trkpt lat="48.875170000000004" lon="8.34139"/>
+   <trkpt lat="48.87505" lon="8.34135"/>
+   <trkpt lat="48.874950000000005" lon="8.34134"/>
+   <trkpt lat="48.874840000000006" lon="8.34135"/>
+   <trkpt lat="48.874750000000006" lon="8.34139"/>
+   <trkpt lat="48.87465" lon="8.34153"/>
+   <trkpt lat="48.874570000000006" lon="8.341700000000001"/>
+   <trkpt lat="48.87435000000001" lon="8.34267"/>
+   <trkpt lat="48.87426000000001" lon="8.343"/>
+   <trkpt lat="48.873850000000004" lon="8.34403"/>
+   <trkpt lat="48.87348" lon="8.34483"/>
+   <trkpt lat="48.87333" lon="8.34502"/>
+   <trkpt lat="48.87314000000001" lon="8.345220000000001"/>
+   <trkpt lat="48.87292" lon="8.34534"/>
+   <trkpt lat="48.87228" lon="8.34556"/>
+   <trkpt lat="48.872020000000006" lon="8.3457"/>
+   <trkpt lat="48.87153000000001" lon="8.346070000000001"/>
+   <trkpt lat="48.871230000000004" lon="8.346430000000002"/>
+   <trkpt lat="48.870990000000006" lon="8.34678"/>
+   <trkpt lat="48.87046" lon="8.34767"/>
+   <trkpt lat="48.86999" lon="8.348310000000001"/>
+   <trkpt lat="48.869240000000005" lon="8.34919"/>
+   <trkpt lat="48.868500000000004" lon="8.349860000000001"/>
+   <trkpt lat="48.86798" lon="8.35025"/>
+   <trkpt lat="48.867070000000005" lon="8.35078"/>
+   <trkpt lat="48.86536" lon="8.35149"/>
+   <trkpt lat="48.86486000000001" lon="8.35172"/>
+   <trkpt lat="48.86413" lon="8.35194"/>
+   <trkpt lat="48.864020000000004" lon="8.35222"/>
+   <trkpt lat="48.864090000000004" lon="8.35252"/>
+   <trkpt lat="48.86506000000001" lon="8.35405"/>
+   <trkpt lat="48.865730000000006" lon="8.35504"/>
+   <trkpt lat="48.86634" lon="8.35613"/>
+   <trkpt lat="48.86657" lon="8.356850000000001"/>
+   <trkpt lat="48.8667" lon="8.35767"/>
+   <trkpt lat="48.8667" lon="8.35848"/>
+   <trkpt lat="48.866490000000006" lon="8.35914"/>
+   <trkpt lat="48.8661" lon="8.35997"/>
+   <trkpt lat="48.865460000000006" lon="8.36073"/>
+   <trkpt lat="48.864810000000006" lon="8.361590000000001"/>
+   <trkpt lat="48.86392000000001" lon="8.362870000000001"/>
+   <trkpt lat="48.86307" lon="8.363840000000001"/>
+   <trkpt lat="48.862300000000005" lon="8.36454"/>
+   <trkpt lat="48.86157000000001" lon="8.36503"/>
+   <trkpt lat="48.86124" lon="8.36515"/>
+   <trkpt lat="48.85981" lon="8.36496"/>
+   <trkpt lat="48.858760000000004" lon="8.365920000000001"/>
+   <trkpt lat="48.858540000000005" lon="8.36607"/>
+   <trkpt lat="48.85813" lon="8.36625"/>
+   <trkpt lat="48.856880000000004" lon="8.3667"/>
+   <trkpt lat="48.85638" lon="8.36679"/>
+   <trkpt lat="48.85614" lon="8.36677"/>
+   <trkpt lat="48.85568000000001" lon="8.36659"/>
+   <trkpt lat="48.85535" lon="8.36644"/>
+   <trkpt lat="48.85521000000001" lon="8.366340000000001"/>
+   <trkpt lat="48.855140000000006" lon="8.36625"/>
+   <trkpt lat="48.85483000000001" lon="8.365680000000001"/>
+   <trkpt lat="48.854670000000006" lon="8.36548"/>
+   <trkpt lat="48.854580000000006" lon="8.365400000000001"/>
+   <trkpt lat="48.854490000000006" lon="8.365350000000001"/>
+   <trkpt lat="48.853790000000004" lon="8.365060000000001"/>
+   <trkpt lat="48.853660000000005" lon="8.364980000000001"/>
+   <trkpt lat="48.853530000000006" lon="8.36487"/>
+   <trkpt lat="48.85333000000001" lon="8.364590000000002"/>
+  </trkseg>
+ </trk>
+</gpx>

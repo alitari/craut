@@ -6,8 +6,8 @@
 <title>CRAUT Routes</title>
 <link rel="stylesheet" href="/css/styles.css" type="text/css" />
 <link href="D:\ws\git\craut\src\main\resources\static\css\styles.css" rel="stylesheet" type="text/css" />
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script src="/js/routeDetailsMap.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+<script src="/js/routeDetailsMap.js"></script>
 <!--[if lt IE 9]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
@@ -42,7 +42,7 @@
 			<h3 th:text="${route}">Route (id:23) Details</h3>
 			<table>
 				<tr>
-					<td>
+					<td valign="top">
 						<fieldset>
 
 							<legend>Basic</legend>
@@ -51,10 +51,13 @@
 									<label for="name">Name:</label> <input th:value="${route.name}" type="text" name="name" id="name" />
 								</p>
 								<p>
-									<label for="start">Start Time:</label> <input th:value="${route.start}" disabled="disabled" type="text" name="start" id="start" />
+									<label for="start">Start Time:</label> <input th:value="${route.start}" disabled="disabled" type="text"
+										name="start" id="start" />
 								</p>
-								<input type="hidden" name="id" th:value="${route.id}"/>
-								<p><input type="submit" name="send" class="formbutton" value="Update" /></p>
+								<input type="hidden" name="id" th:value="${route.id}" />
+								<p>
+									<input type="submit" name="send" class="formbutton" value="Update" />
+								</p>
 							</form>
 
 						</fieldset>
@@ -65,10 +68,20 @@
 							<legend>Details</legend>
 							<form action="#" method="get">
 								<p>
-									<label for="points">Points count:</label> <input  th:value="${#lists.size(routePoints) }" disabled="disabled" type="text" name="points" id="points" />
+									<label for="points">Points count:</label> <input th:value="${#lists.size(routePoints)/2 }" disabled="disabled"
+										type="text" name="points" id="points" />
 								</p>
 								<p>
-									<label for="distance">Distance:</label> <input th:value="${distance}" disabled="disabled" type="text" name="distance" id="distance" />
+									<label for="distance">Distance (km):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.routeDistance/1000,3,2,'COMMA')}" disabled="disabled"
+										type="text" name="distance" id="distance" />
+								</p>
+								<p>
+									<label for="maxdistance">Max Point Distance(m):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.maxDistance,3,2,'COMMA')}" disabled="disabled"
+										type="text" name="maxdistance" id="maxdistance" />
+								</p>
+								<p>
+									<label for="mindistance">Min Point Distance(m):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.minDistance,3,2,'COMMA')}" disabled="disabled"
+										type="text" name="mindistance" id="mindistance" />
 								</p>
 							</form>
 
@@ -79,8 +92,8 @@
 					<td colspan="2">
 						<fieldset>
 							<legend>Map</legend>
-							<div id="map-canvas" style=" height:100px"></div>	
-							
+							<div id="map-canvas" style="height: 100px"></div>
+
 						</fieldset>
 					</td>
 				</tr>

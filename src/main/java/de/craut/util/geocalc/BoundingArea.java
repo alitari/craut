@@ -13,8 +13,7 @@
 package de.craut.util.geocalc;
 
 import org.apache.log4j.Logger;
-
-import de.craut.domain.RoutePoint;
+import org.springframework.data.geo.Point;
 
 /**
  * Represents an area, defined by its top left and bottom right coordinates
@@ -23,42 +22,42 @@ import de.craut.domain.RoutePoint;
  */
 public class BoundingArea {
 	Logger logger = Logger.getLogger(getClass());
-	private RoutePoint northEast, southWest;
-	private RoutePoint southEast, northWest;
+	private Point northEast, southWest;
+	private Point southEast, northWest;
 
-	public BoundingArea(RoutePoint northEast, RoutePoint southWest) {
+	public BoundingArea(Point northEast, Point southWest) {
 		this.northEast = northEast;
 		this.southWest = southWest;
 
-		southEast = new RoutePoint(null, 1, southWest.getLatitude(), northEast.getLongitude());
-		northWest = new RoutePoint(null, 2, northEast.getLatitude(), southWest.getLongitude());
+		southEast = new Point(southWest.getX(), northEast.getY());
+		northWest = new Point(northEast.getX(), southWest.getY());
 	}
 
 	@Deprecated
-	public RoutePoint getBottomRight() {
+	public Point getBottomRight() {
 		logger.debug("getBottomRight() is deprecated. Use getSouthWest() instead.");
 		return southWest;
 	}
 
 	@Deprecated
-	public RoutePoint getTopLeft() {
+	public Point getTopLeft() {
 		logger.debug("getTopLeft() is deprecated. Use getNorthEast() instead.");
 		return northEast;
 	}
 
-	public RoutePoint getNorthEast() {
+	public Point getNorthEast() {
 		return northEast;
 	}
 
-	public RoutePoint getSouthWest() {
+	public Point getSouthWest() {
 		return southWest;
 	}
 
-	public RoutePoint getSouthEast() {
+	public Point getSouthEast() {
 		return southEast;
 	}
 
-	public RoutePoint getNorthWest() {
+	public Point getNorthWest() {
 		return northWest;
 	}
 
@@ -67,8 +66,8 @@ public class BoundingArea {
 		return "BoundingArea{" + "northEast=" + northEast + ", southWest=" + southWest + '}';
 	}
 
-	public boolean isContainedWithin(RoutePoint point) {
-		boolean predicate1 = point.getLatitude() >= this.southWest.getLatitude() && point.getLatitude() <= this.northEast.getLatitude();
+	public boolean isContainedWithin(Point point) {
+		boolean predicate1 = point.getX() >= this.southWest.getX() && point.getX() <= this.northEast.getX();
 
 		if (!predicate1) {
 			return false;
@@ -76,21 +75,21 @@ public class BoundingArea {
 
 		boolean predicate2;
 
-		if (southWest.getLongitude() > northEast.getLongitude()) { // area is
-			                                                       // going
-			                                                       // across
+		if (southWest.getY() > northEast.getY()) { // area is
+			// going
+			// across
 			// the max/min
 			// longitude boundaries
 			// (ie. sort of back of
 			// the Earth)
 			// we "split" the area in 2, longitude-wise, point only needs to be
 			// in one or the other.
-			boolean predicate3 = point.getLongitude() <= northEast.getLongitude() && point.getLongitude() >= -180;
-			boolean predicate4 = point.getLongitude() >= southWest.getLongitude() && point.getLongitude() <= 180;
+			boolean predicate3 = point.getY() <= northEast.getY() && point.getY() >= -180;
+			boolean predicate4 = point.getY() >= southWest.getY() && point.getY() <= 180;
 
 			predicate2 = predicate3 || predicate4;
 		} else {
-			predicate2 = point.getLongitude() >= southWest.getLongitude() && point.getLongitude() <= northEast.getLongitude();
+			predicate2 = point.getY() >= southWest.getY() && point.getY() <= northEast.getY();
 		}
 
 		return predicate1 && predicate2;

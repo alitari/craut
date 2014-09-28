@@ -29,6 +29,18 @@ public class Route implements Serializable {
 	@Column(name = "rt_start", nullable = true)
 	private Date start;
 
+	@Column(name = "rt_start_latitude", nullable = false)
+	private double startLatitude;
+
+	@Column(name = "rt_start_longitude", nullable = false)
+	private double startLongitude;
+
+	@Column(name = "rt_end_latitude", nullable = false)
+	private double endLatitude;
+
+	@Column(name = "rt_end_longitude", nullable = false)
+	private double endLongitude;
+
 	protected Route() {
 	}
 
@@ -56,6 +68,38 @@ public class Route implements Serializable {
 
 	public void setStart(Date start) {
 		this.start = start;
+	}
+
+	public double getStartLatitude() {
+		return startLatitude;
+	}
+
+	public void setStartLatitude(double startLatitude) {
+		this.startLatitude = startLatitude;
+	}
+
+	public double getStartLongitude() {
+		return startLongitude;
+	}
+
+	public void setStartLongitude(double startLongitude) {
+		this.startLongitude = startLongitude;
+	}
+
+	public double getEndLatitude() {
+		return endLatitude;
+	}
+
+	public void setEndLatitude(double endLatitude) {
+		this.endLatitude = endLatitude;
+	}
+
+	public double getEndLongitude() {
+		return endLongitude;
+	}
+
+	public void setEndLongitude(double endLongitude) {
+		this.endLongitude = endLongitude;
 	}
 
 	@JsonIgnore

@@ -1,7 +1,5 @@
 package de.craut.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,9 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.data.geo.Point;
+
 @Entity
 @Table(name = "route_point")
-public class RoutePoint implements Serializable {
+public class RoutePoint extends Point {
 
 	@Id()
 	@Column(name = "rp_id", nullable = false)
@@ -33,15 +33,16 @@ public class RoutePoint implements Serializable {
 	@Column(name = "rp_longitude", nullable = false)
 	private double longitude;
 
-	protected RoutePoint() {
-	}
-
 	public RoutePoint(Route route, int sequence, String latitude, String longitude) {
 		this(route, sequence, Double.parseDouble(latitude), Double.parseDouble(longitude));
 	}
 
+	protected RoutePoint() {
+		super(0, 0);
+	}
+
 	public RoutePoint(Route route, int sequence, double latitude, double longitude) {
-		super();
+		super(latitude, longitude);
 		this.sequence = sequence;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -54,6 +55,16 @@ public class RoutePoint implements Serializable {
 
 	public double getLatitude() {
 		return latitude;
+	}
+
+	@Override
+	public double getX() {
+		return getLatitude();
+	}
+
+	@Override
+	public double getY() {
+		return getLongitude();
 	}
 
 	public void setLatitude(double latitude) {
@@ -108,11 +119,11 @@ public class RoutePoint implements Serializable {
 	}
 
 	public Route getRoute() {
-	    return route;
-    }
+		return route;
+	}
 
 	public void setRoute(Route route) {
-	    this.route = route;
-    }
+		this.route = route;
+	}
 
 }
