@@ -13,8 +13,7 @@
   </root>
   
    <logger name="de.craut" level="debug" />
-  
-  
+   <logger name="org.springframework.data" level="info" />
   
   
 </configuration>

@@ -1,8 +1,12 @@
 spring:
     mvc.message-codes-resolver.format: PREFIX_ERROR_CODE
-    thymeleaf.prefix: classpath:/templates/
-    thymeleaf.cache: false
-
+    thymeleaf:
+         prefix: classpath:/templates/
+         cache: false
+    jpa:
+       show-sql: false
+    
+    
 logging:
     file: logfile.txt   
 

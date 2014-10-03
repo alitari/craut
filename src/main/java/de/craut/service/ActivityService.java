@@ -2,7 +2,6 @@ package de.craut.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +25,9 @@ import de.craut.util.pointmatcher.PointMatcher.ActivityMatchTreshHold20;
 
 @Service
 public class ActivityService {
+
+	protected final static double latitudeMeter = 0.000009;
+	protected final static double longitudeMeter = 0.000014;
 
 	private final ActivityRepository activityRepository;
 	private final RouteRepository routeRepository;
@@ -52,13 +54,24 @@ public class ActivityService {
 
 		GpxPointStatistics statistics = GpxUtils.getStatistics(gpxPoints);
 
-		Iterator<Route> routeIter = routeRepository.findAll().iterator();// TODO:
-																		 // filter
+		// List<Route> routes =
+		// routeRepository.findInArea(gpxPoints.get(0).getLatitude(),
+		// gpxPoints.get(0).getLongitude(), statistics.getRouteDistance());
 
-		logger.info("create Activities for gpxTrackPoints. " + "statistics=" + statistics + ",  checking routes, for matching... ");
+		double latitudeOffet = latitudeMeter * statistics.getRouteDistance();
+		double longitudeOffet = longitudeMeter * statistics.getRouteDistance();
 
-		while (routeIter.hasNext()) {
-			Route route = routeIter.next();
+		double upperBoundLatitude = gpxPoints.get(0).getLatitude() + latitudeOffet;
+		double upperBoundLongitude = gpxPoints.get(0).getLongitude() + longitudeOffet;
+		double lowerBoundLatitude = gpxPoints.get(0).getLatitude() - latitudeOffet;
+		double lowerBoundLongitude = gpxPoints.get(0).getLongitude() - longitudeOffet;
+
+		List<Route> routes = routeRepository.findByStartLatitudeLessThanAndStartLongitudeLessThanAndStartLatitudeGreaterThanAndStartLongitudeGreaterThan(
+		        upperBoundLatitude, upperBoundLongitude, lowerBoundLatitude, lowerBoundLongitude);
+
+		logger.info("create Activities for gpxTrackPoints. " + "statistics=" + statistics + ",  checking " + routes.size() + " routes, for matching... ");
+
+		for (Route route : routes) {
 			List<RoutePoint> routepoints = routePointRepository.findByRoute(route);
 			List<ActivityPoint> activityPoints = new PointMatcher.ActivityMatchTreshHold20(gpxPoints, routepoints).start();
 			if (!activityPoints.isEmpty()) {
