@@ -1,5 +1,6 @@
 package de.craut.service;
 
+import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +40,10 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 		activityRepository = mock(ActivityRepository.class);
 
 		allRoutes = new ArrayList<Route>();
+		when(
+		        routeRepository.findByStartLatitudeLessThanAndStartLongitudeLessThanAndStartLatitudeGreaterThanAndStartLongitudeGreaterThan(anyDouble(),
+		                anyDouble(), anyDouble(), anyDouble())).thenReturn(allRoutes);
+
 		when(routeRepository.findAll()).thenReturn(allRoutes);
 
 		underTest = createService(activityRepository, routeRepository, routePointRepository, fileUploadRepository);
