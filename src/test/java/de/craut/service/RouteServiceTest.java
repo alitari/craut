@@ -19,8 +19,11 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.data.geo.Point;
 
+import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
 import de.craut.domain.FileUpload;
+import de.craut.domain.FileUpload.Format;
+import de.craut.domain.FileUpload.Type;
 import de.craut.domain.FileUploadRepository;
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
@@ -101,19 +104,21 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 	@Test
 	public void fileUpload() {
 		byte[] content = new byte[] { 1, 2, 3, 4, Byte.MAX_VALUE, Byte.MIN_VALUE };
-		underTest.fileUpload(content);
+		underTest.fileUpload(content, Type.Activity, Format.GPX);
 		String thread = String.valueOf(Thread.currentThread().getId()) + " " + Thread.currentThread().getName();
 
 		ArgumentCaptor<FileUpload> fileUploadCaptor = ArgumentCaptor.forClass(FileUpload.class);
 		verify(fileUploadRepository, times(1)).save(fileUploadCaptor.capture());
 		assertThat(fileUploadCaptor.getValue().getContent(), is(content));
 		assertThat(fileUploadCaptor.getValue().getThread(), is(thread));
+		assertThat(fileUploadCaptor.getValue().getFormat(), is(Format.GPX));
+		assertThat(fileUploadCaptor.getValue().getType(), is(Type.Activity));
 	}
 
 	@Test
 	public void fetchFileUploads() throws Exception {
 		List<FileUpload> fileUploads = new ArrayList<FileUpload>();
-		FileUpload fileUpload = new FileUpload("thread", 2, new byte[] { 1, 2, 34 }, new Date());
+		FileUpload fileUpload = new FileUpload("thread", 2, new byte[] { 1, 2, 34 }, new Date(), Type.Activity, Format.GPX);
 		fileUploads.add(fileUpload);
 		when(fileUploadRepository.findByInsertDateGreaterThan(any(Date.class))).thenReturn(fileUploads);
 
@@ -125,8 +130,8 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 	}
 
 	@Override
-	protected RouteService createService(ActivityRepository activityRepository, RouteRepository routeRepository, RoutePointRepository routePointRepository,
-	        FileUploadRepository fileUploadRepository) {
+	protected RouteService createService(ActivityRepository activityRepository, ActivityPointRepository activityPointRepository,
+	        RouteRepository routeRepository, RoutePointRepository routePointRepository, FileUploadRepository fileUploadRepository) {
 		return new RouteService(routeRepository, routePointRepository, fileUploadRepository);
 	}
 

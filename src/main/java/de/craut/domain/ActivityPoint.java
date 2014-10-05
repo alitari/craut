@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,7 +25,7 @@ public class ActivityPoint implements Serializable {
 	@JoinColumn(name = "ap_ra_id", referencedColumnName = "ra_id")
 	private Activity activity;
 
-	@OneToOne(optional = false)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "ap_rp_id", referencedColumnName = "rp_id")
 	private RoutePoint routePoint;
 

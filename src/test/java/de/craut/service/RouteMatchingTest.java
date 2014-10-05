@@ -53,15 +53,15 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 		Route roteLache = saveRoute("RoteLache2");
 
 		assertMatch("22-08-2014", freiolsheim);
-		// assertMatch("24-04-2014", freiolsheim);
-		// assertMatch("30-04-2014", roteLache);
-		// assertMatch("08-05-2014", freiolsheim);
-		// assertMatch("14-05-2014", roteLache);
-		// assertMatch("16-05-2014", roteLache);
-		// assertMatch("25-05-2014", freiolsheim);
-		// assertMatch("28-05-2014", roteLache);
-		// assertMatch("05-06-2014", freiolsheim);
-		// assertMatch("07-06-2014", freiolsheim);
+		assertMatch("24-04-2014", freiolsheim);
+		assertMatch("30-04-2014", roteLache);
+		assertMatch("08-05-2014", freiolsheim);
+		assertMatch("14-05-2014", roteLache);
+		assertMatch("16-05-2014", roteLache);
+		assertMatch("25-05-2014", freiolsheim);
+		assertMatch("28-05-2014", roteLache);
+		assertMatch("05-06-2014", freiolsheim);
+		assertMatch("07-06-2014", freiolsheim);
 
 	}
 

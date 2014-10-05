@@ -26,7 +26,22 @@
 
 			</li>
 			<li>
-				<h4>Upload Activity</h4> <a href="#" class="button">File</a>
+				<h4>Upload</h4>
+			    <fieldset >
+			        <legend>Activity File</legend>
+					<form method="post" enctype="multipart/form-data" action="/activities/upload">
+						<input type="file" name="file" /> 
+						<input class="formbutton" type="submit" value="upload"/>
+					</form>
+				</fieldset>
+				
+				<fieldset>
+					<legend>Route File</legend>
+					<form method="post" enctype="multipart/form-data" action="/routes/upload">
+						<input type="file" name="file" />  <input class="formbutton" type="submit" value="upload" />
+					</form>
+				</fieldset>
+				<div th:text="${uploadMessage}">File successfully uploaded.</div>
 			</li>
 			<li>
 				<h4>Map Overview</h4>

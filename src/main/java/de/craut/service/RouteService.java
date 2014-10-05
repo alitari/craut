@@ -13,6 +13,8 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
 import de.craut.domain.FileUpload;
+import de.craut.domain.FileUpload.Format;
+import de.craut.domain.FileUpload.Type;
 import de.craut.domain.FileUploadRepository;
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
@@ -81,10 +83,10 @@ public class RouteService {
 		return routePointRepository.findByRoute(route);
 	}
 
-	public FileUpload fileUpload(byte[] content) {
+	public FileUpload fileUpload(byte[] content, Type type, Format format) {
 		String thread = String.valueOf(Thread.currentThread().getId()) + " " + Thread.currentThread().getName();
 		Date timeStamp = new Date();
-		FileUpload fileUpload = new FileUpload(thread, content.length, content, timeStamp);
+		FileUpload fileUpload = new FileUpload(thread, content.length, content, timeStamp, type, format);
 		return fileUploadRepository.save(fileUpload);
 	}
 

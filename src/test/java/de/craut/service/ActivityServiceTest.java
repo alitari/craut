@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import de.craut.domain.Activity;
 import de.craut.domain.ActivityPoint;
+import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
 import de.craut.domain.FileUploadRepository;
 import de.craut.domain.Route;
@@ -44,9 +45,9 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 	}
 
 	@Override
-	protected ActivityService createService(ActivityRepository activityRepository, RouteRepository routeRepository, RoutePointRepository routePointRepository,
-	        FileUploadRepository fileUploadRepository) {
-		return new ActivityService(activityRepository, routeRepository, routePointRepository);
+	protected ActivityService createService(ActivityRepository activityRepository, ActivityPointRepository activityPointRepository,
+	        RouteRepository routeRepository, RoutePointRepository routePointRepository, FileUploadRepository fileUploadRepository) {
+		return new ActivityService(activityRepository, activityPointRepository, routeRepository, routePointRepository);
 	}
 
 	private List<GpxTrackPoint> createTrackPoints() {

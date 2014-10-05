@@ -167,8 +167,8 @@ public abstract class PointMatcher<G extends Point, R extends Point, A> {
 		public ActivityMatchTreshHold20(List<GpxTrackPoint> gpxPoints, List<RoutePoint> routepoints) {
 			super(gpxPoints, routepoints);
 			Route route = routepoints.get(0).getRoute();
-			activity = new Activity("Activity on" + route.getName(), route, new Date());
-
+			Date date = gpxPoints.get(0).time.getTime();
+			activity = new Activity("Activity " + date + " " + route.getName(), route, date);
 		}
 
 		@Override

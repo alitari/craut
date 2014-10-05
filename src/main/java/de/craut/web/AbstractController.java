@@ -52,7 +52,7 @@ public class AbstractController {
 
 	}
 
-	protected void uploadFile(MultipartFile file, Model model) {
+	protected FileUpload uploadFile(MultipartFile file, Model model, FileUpload.Type type) {
 		FileUpload fileUpload = null;
 		String uploadMessage = "no message";
 		if (!file.isEmpty()) {
@@ -62,13 +62,14 @@ public class AbstractController {
 			} catch (IOException e) {
 				uploadMessage = e.getClass().getSimpleName() + " " + e.getMessage();
 			}
-			fileUpload = routeService.fileUpload(content);
+			fileUpload = routeService.fileUpload(content, type, FileUpload.Format.GPX);
 			uploadMessage = "File successfully uploaded! (" + content.length + " Bytes)";
 
 		} else {
 			uploadMessage = "File is empty!";
 		}
 		model.addAttribute("uploadMessage", (fileUpload == null ? "Error:" : "") + uploadMessage);
+		return fileUpload;
 	}
 
 }

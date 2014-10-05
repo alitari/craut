@@ -35,13 +35,23 @@ public class HsqlSetup {
 			RouteService routeService = ctx.getBean(RouteService.class);
 
 			Route savedRoute = routeService.saveRoute("Baden-Baden", Arrays.asList(createPoints()));
+			createActivityFromRoute(ctx, savedRoute);
 
+			savedRoute = saveRoute(ctx, "Malsch-Freiolsheim.gpx");
+			createActivityFromRoute(ctx, savedRoute);
+
+			savedRoute = saveRoute(ctx, "RoteLache.gpx");
+			createActivityFromRoute(ctx, savedRoute);
+
+		}
+
+		private void createActivityFromRoute(ApplicationContext ctx, Route route) {
 			Date start = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
 			ActivityRepository activityRepository = ctx.getBean(ActivityRepository.class);
-			Activity activity = new Activity("Baden Baden Act", savedRoute, start);
+			Activity activity = new Activity(route.getName() + " Acticity", route, start);
 			activityRepository.save(activity);
 
-			List<RoutePoint> rpList = routeService.fetchRoutePoints(savedRoute);
+			List<RoutePoint> rpList = ctx.getBean(RouteService.class).fetchRoutePoints(route);
 			List<ActivityPoint> apList = new ArrayList<ActivityPoint>();
 
 			for (int i = 0; i < rpList.size(); i++) {
@@ -53,18 +63,15 @@ public class HsqlSetup {
 
 			ActivityPointRepository activityPointRepo = ctx.getBean(ActivityPointRepository.class);
 			activityPointRepo.save(apList);
-
-			saveRoute(ctx, "Malsch-Freiolsheim.gpx");
-			saveRoute(ctx, "RoteLache.gpx");
-
 		}
 
-		private void saveRoute(ApplicationContext ctx, String gpxFileName) {
+		private Route saveRoute(ApplicationContext ctx, String gpxFileName) {
 			InputStream gpxIs = getClass().getResourceAsStream("/gpx/routes/" + gpxFileName);
 			GPXParser gpxParser = new GPXParser();
 			List<GpxTrackPoint> points = gpxParser.parse(gpxIs);
 			RouteService routeService = ctx.getBean(RouteService.class);
-			routeService.saveRoute(gpxFileName, points);
+			Route saveRoute = routeService.saveRoute(gpxFileName, points);
+			return saveRoute;
 		}
 
 		private Point[] createPoints() {

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
 import de.craut.domain.FileUploadRepository;
 import de.craut.domain.RoutePointRepository;
@@ -23,8 +24,9 @@ public class ServiceTestContext {
 	}
 
 	@Bean
-	public ActivityService activityService(ActivityRepository activityRepository, RouteRepository routeRepository, RoutePointRepository routePointRepository) {
-		return new ActivityService(activityRepository, routeRepository, routePointRepository);
+	public ActivityService activityService(ActivityRepository activityRepository, ActivityPointRepository activityPointRepository,
+	        RouteRepository routeRepository, RoutePointRepository routePointRepository) {
+		return new ActivityService(activityRepository, activityPointRepository, routeRepository, routePointRepository);
 	}
 
 }

@@ -15,6 +15,14 @@ import javax.persistence.Table;
 @Table(name = "fileupload")
 public class FileUpload implements Serializable {
 
+	public static enum Type {
+		Activity, Route;
+	}
+
+	public static enum Format {
+		GPX;
+	}
+
 	@Id()
 	@Column(name = "fu_id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,6 +33,12 @@ public class FileUpload implements Serializable {
 
 	@Column(name = "fu_size", nullable = false)
 	private long size;
+
+	@Column(name = "fu_type", nullable = false)
+	private Type type;
+
+	@Column(name = "fu_format", nullable = false)
+	private Format format;
 
 	public long getSize() {
 		return size;
@@ -45,12 +59,14 @@ public class FileUpload implements Serializable {
 		super();
 	}
 
-	public FileUpload(String thread, long size, byte[] content, Date insertDate) {
+	public FileUpload(String thread, long size, byte[] content, Date insertDate, Type type, Format format) {
 		super();
 		this.thread = thread;
 		this.size = size;
 		this.content = content;
 		this.insertDate = insertDate;
+		this.type = type;
+		this.format = format;
 	}
 
 	public long getId() {
@@ -84,4 +100,21 @@ public class FileUpload implements Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public Format getFormat() {
+		return format;
+	}
+
+	public void setFormat(Format format) {
+		this.format = format;
+	}
+
 }
