@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import de.craut.domain.FileUpload;
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
+import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 import de.craut.util.geocalc.GpxPointStatistics;
 import de.craut.util.geocalc.GpxUtils;
 
@@ -71,8 +71,24 @@ public class RouteController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String upload(@RequestParam("file") MultipartFile file, Model model) {
-		uploadFile(file, model, FileUpload.Type.Route);
+	public String upload(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, Model model) {
+		List<GpxTrackPoint> trkPoints = parseGpxFile(file);
+		GpxPointStatistics statistics = GpxUtils.getStatistics(trkPoints);
+		String message = null;
+		if (statistics.getMinDistance() < 5) {
+			message = " min Point distance=" + statistics.getMinDistance();
+		} else if (statistics.getRouteDistance() > 30000) {
+			message = " route distance=" + statistics.getRouteDistance();
+		} else if (statistics.getTrkPointCount() > 500) {
+			message = " trackpointCount=" + statistics.getTrkPointCount();
+		}
+
+		if (message != null) {
+			model.addAttribute("uploadMessage", "No routes matches.");
+		} else {
+			routeService.saveRoute(name, trkPoints);
+		}
+
 		fillPageContent(model);
 		return "routes";
 	}

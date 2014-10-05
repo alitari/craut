@@ -38,7 +38,9 @@
 				<fieldset>
 					<legend>Route File</legend>
 					<form method="post" enctype="multipart/form-data" action="/routes/upload">
-						<input type="file" name="file" />  <input class="formbutton" type="submit" value="upload" />
+						<input type="file" name="file" />  
+						<input type="text" name="name" />
+						<input class="formbutton" type="submit" value="upload" />
 					</form>
 				</fieldset>
 				<div th:text="${uploadMessage}">File successfully uploaded.</div>

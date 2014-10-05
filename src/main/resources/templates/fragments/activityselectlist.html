@@ -26,17 +26,21 @@
 				<table>
 					<tr>
 						<th>Save</th>
+						<th>Name</th>
 						<th>Route</th>
 						<th>Distance</th>
 					</tr>
 					<tr th:each="activity : ${activityMap.keySet()}">
-						<td><input type="checkbox" th:name="activitysave" th:value="${activity.route.name}"/></td>
+						<td><input checked="checked" type="checkbox" th:name="activitysave" th:value="${activity.route.name}"/></td>
+						<td th:text="${activity.name}">24.08.2012</td>
 						<td th:text="${activity.route.name}">Kaltenbronn</td>
 						<td>? km</td>
 					</tr>
 				</table>
 
 				<input type="submit" name="send" class="formbutton" value="submit" />
+				<a class="button" href="list" >cancel</a>
+				
 			</form>
 		</article>
 	</section>

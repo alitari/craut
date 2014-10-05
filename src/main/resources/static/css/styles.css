@@ -109,15 +109,16 @@ fieldset form input, fieldset form select, fieldset form textarea {
 	border:1px solid #ddd;
 }
 input.formbutton {
-	background:#0C3A87;
-	border:none;
+	background:#0B3170;
 	border-radius: 5px 5px 5px 5px;
 /* 	border-bottom:3px solid #082659; */
 	color:#ffffff;
 	font-weight:bold;
-	padding:5px 10px;
-	font-size:13px;
+	padding: 8px 15px;
+	text-transform: uppercase;
 }
+
+
 h1 {
 	font-size:2.4em;
 }

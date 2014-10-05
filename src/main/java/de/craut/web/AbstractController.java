@@ -1,6 +1,7 @@
 package de.craut.web;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.craut.domain.FileUpload;
 import de.craut.service.RouteService;
+import de.craut.util.geocalc.GPXParser;
+import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
 public class AbstractController {
 
@@ -70,6 +73,18 @@ public class AbstractController {
 		}
 		model.addAttribute("uploadMessage", (fileUpload == null ? "Error:" : "") + uploadMessage);
 		return fileUpload;
+	}
+
+	protected List<GpxTrackPoint> parseGpxFile(MultipartFile file) {
+		InputStream inputStream = null;
+		try {
+			inputStream = file.getInputStream();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		GPXParser gpxParser = new GPXParser();
+		List<GpxTrackPoint> trkPoints = gpxParser.parse(inputStream);
+		return trkPoints;
 	}
 
 }

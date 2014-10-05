@@ -1,7 +1,5 @@
 package de.craut.web;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,9 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.craut.domain.Activity;
 import de.craut.domain.ActivityPoint;
-import de.craut.domain.FileUpload;
 import de.craut.service.ActivityService;
-import de.craut.util.geocalc.GPXParser;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
 @Controller
@@ -46,21 +42,17 @@ public class ActivityController extends AbstractController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String upload(@RequestParam("file") MultipartFile file, Model model) {
-		FileUpload fileUpload = uploadFile(file, model, FileUpload.Type.Activity);
-		InputStream inputStream = null;
-		try {
-			inputStream = file.getInputStream();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		GPXParser gpxParser = new GPXParser();
-		List<GpxTrackPoint> trkPoints = gpxParser.parse(inputStream);
+		List<GpxTrackPoint> trkPoints = parseGpxFile(file);
 
 		Map<Activity, List<ActivityPoint>> activitiesMap = activityService.createActivities(trkPoints);
-
-		model.addAttribute("activityMap", activitiesMap);
-
-		return "activityselection";
+		if (!activitiesMap.isEmpty()) {
+			model.addAttribute("activityMap", activitiesMap);
+			return "activityselection";
+		} else {
+			model.addAttribute("uploadMessage", "No routes matches.");
+			fillActivitiesContent(model);
+			return "activities";
+		}
 	}
 
 	@RequestMapping("/uploadselected")

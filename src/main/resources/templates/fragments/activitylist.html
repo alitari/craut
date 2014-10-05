@@ -33,8 +33,8 @@
 				<tr th:each="activity : ${activities}">
 					<td th:text="${activity.id}">122</td>
 					<td th:text="${activity.name}">Kaltenbronn</td>
-					<td th:text="${activity.start}">3 days ago</td>
-					<td th:text="${activity.route.name}"> </td>
+					<td th:text="${activity.startDay}">3 days ago</td>
+					<td ><a th:text="${activity.route.name}" th:href="@{/routes/edit(id=${activity.route.id})}" href="#">Kaltenbronn </a></td>
                 </tr>
 			</table>
 
