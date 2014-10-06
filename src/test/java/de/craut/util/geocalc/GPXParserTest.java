@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -36,8 +37,9 @@ public class GPXParserTest {
 	@Test
 	public void dateFormat() throws Exception {
 		String dateStr = "2014-06-27T11:03:12Z";
-
-		Calendar cal = new GPXParser().parseTime(dateStr);
+		Date date = new GPXParser().parseTime(dateStr);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
 		assertThat(cal.get(Calendar.SECOND), is(12));
 		assertThat(cal.get(Calendar.MINUTE), is(3));
 		assertThat(cal.get(Calendar.HOUR), is(11));

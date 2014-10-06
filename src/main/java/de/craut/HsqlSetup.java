@@ -3,10 +3,10 @@ package de.craut;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -46,10 +46,12 @@ public class HsqlSetup {
 		}
 
 		private void createActivityFromRoute(ApplicationContext ctx, Route route) {
-			Date start = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
+			Date start = DateUtils.addMinutes(new Date(), -20);
+			Date end = new Date();
+
 			ActivityRepository activityRepository = ctx.getBean(ActivityRepository.class);
-			Activity activity = new Activity(route.getName() + " Acticity", route, start);
-			activityRepository.save(activity);
+			Activity activity = new Activity(DateFormatUtils.format(start, "dd.MM.yy"), route, start, end);
+			activity = activityRepository.save(activity);
 
 			List<RoutePoint> rpList = ctx.getBean(RouteService.class).fetchRoutePoints(route);
 			List<ActivityPoint> apList = new ArrayList<ActivityPoint>();
@@ -59,6 +61,7 @@ public class HsqlSetup {
 				routePoint.setSequence(i);
 				ActivityPoint activityPoint = new ActivityPoint(activity, routePoint, start);
 				start = DateUtils.addSeconds(start, 1);
+				apList.add(activityPoint);
 			}
 
 			ActivityPointRepository activityPointRepo = ctx.getBean(ActivityPointRepository.class);

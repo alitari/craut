@@ -51,7 +51,11 @@ public class ActivityService {
 		List<Activity> activities = new ArrayList<Activity>();
 		CollectionUtils.addAll(activities, activityRepository.findAll().iterator());
 		return activities;
+	}
 
+	public List<ActivityPoint> fetchActivityPoints(long id) {
+		Activity activity = activityRepository.findOne(id);
+		return activityPointRepository.findByActivity(activity);
 	}
 
 	public Map<Activity, List<ActivityPoint>> createActivities(List<GpxTrackPoint> gpxPoints) {
@@ -77,7 +81,13 @@ public class ActivityService {
 			List<ActivityPoint> activityPoints = new PointMatcher.ActivityMatchTreshHold20(gpxPoints, routepoints).start();
 			if (!activityPoints.isEmpty()) {
 				logger.info("TrackPoints matched to " + route + ", creating Activity...");
-				activityMap.put(activityPoints.get(0).getActivity(), activityPoints);
+
+				ActivityPoint firstPoint = activityPoints.get(0);
+				ActivityPoint lastPoint = activityPoints.get(activityPoints.size() - 1);
+				Activity activity = firstPoint.getActivity();
+				activity.setStart(firstPoint.getTime());
+				activity.setEnd(lastPoint.getTime());
+				activityMap.put(activity, activityPoints);
 			}
 		}
 

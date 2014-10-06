@@ -20,6 +20,7 @@ import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
 import de.craut.domain.RoutePointRepository;
 import de.craut.domain.RouteRepository;
+import de.craut.util.geocalc.EarthCalc;
 
 @Service
 public class RouteService {
@@ -59,16 +60,22 @@ public class RouteService {
 		List<RoutePoint> routePoints = new ArrayList<RoutePoint>();
 		Route route = new Route(name, new Date());
 		int seq = 0;
+		double distance = 0;
 		for (Point point : points) {
+			distance += routePoints.size() == 0 ? 0 : EarthCalc.getDistance(point, routePoints.get(routePoints.size() - 1));
 			routePoints.add(new RoutePoint(route, seq, point.getX(), point.getY()));
 			seq++;
 		}
 
-		route.setStartLatitude(routePoints.get(0).getLatitude());
-		route.setStartLongitude(routePoints.get(0).getLongitude());
+		RoutePoint firstPoint = routePoints.get(0);
+		RoutePoint lastPoint = routePoints.get(routePoints.size() - 1);
 
-		route.setEndLatitude(routePoints.get(routePoints.size() - 1).getLatitude());
-		route.setEndLongitude(routePoints.get(routePoints.size() - 1).getLongitude());
+		route.setStartLatitude(firstPoint.getLatitude());
+		route.setStartLongitude(firstPoint.getLongitude());
+
+		route.setEndLatitude(lastPoint.getLatitude());
+		route.setEndLongitude(lastPoint.getLongitude());
+		route.setDistance(distance);
 
 		Route savedRoute = routeRepository.save(route);
 		routePointRepository.save(routePoints);

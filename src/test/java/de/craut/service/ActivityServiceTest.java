@@ -83,12 +83,12 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 	private void checkActivityPoint(ActivityPoint activityPoint, RoutePoint routePoint, int seq, GpxTrackPoint trkPoint) {
 		assertThat(activityPoint.getActivity().getRoute(), is(routePoint.getRoute()));
 		assertThat(activityPoint.getRoutePoint(), is(routePoint));
-		assertThat(activityPoint.getTime(), is(trkPoint.time.getTime()));
+		assertThat(activityPoint.getTime(), is(trkPoint.time));
 	}
 
-	private Calendar createToday(int s) {
+	private Date createToday(int s) {
 		Date dayStart = DateUtils.truncate(new Date(), Calendar.DATE);
-		return DateUtils.toCalendar(DateUtils.addSeconds(dayStart, s));
+		return DateUtils.addSeconds(dayStart, s);
 	}
 
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Activity</title>
+<link rel="stylesheet" href="/css/styles.css" type="text/css" />
+<link href="D:\ws\git\craut\src\main\resources\static\css\styles.css" rel="stylesheet" type="text/css" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+<style>
+       html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="/js/routeDetailsMap.js"></script>
+    
+    
+    
+    
+    
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!--
+
+//-->
+</head>
+
+<body>
+
+
+	<div th:replace="fragments/header :: header"></div>
+
+	<section id="body" class="width clear">
+
+		<div th:replace="fragments/sidebar :: sidebar"></div>
+		<div th:replace="fragments/activitydetails :: content"></div>
+		
+
+	</section>
+	
+	
+	<div th:replace="fragments/footer:: footer"></div>
+
+</body>
+</html>

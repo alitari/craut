@@ -2,6 +2,7 @@ package de.craut.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,14 +36,18 @@ public class Activity implements Serializable {
 	@Column(name = "ra_start", nullable = true)
 	private Date start;
 
+	@Column(name = "ra_end", nullable = true)
+	private Date end;
+
 	protected Activity() {
 	}
 
-	public Activity(String name, Route route, Date start) {
+	public Activity(String name, Route route, Date start, Date end) {
 		super();
 		this.name = name;
 		this.route = route;
 		this.start = start;
+		this.setEnd(end);
 	}
 
 	public long getId() {
@@ -65,9 +70,39 @@ public class Activity implements Serializable {
 		this.start = start;
 	}
 
+	public Date getEnd() {
+		return end;
+	}
+
+	public void setEnd(Date end) {
+		this.end = end;
+	}
+
 	@JsonIgnore
 	public String getStartDay() {
 		return AdvancedDateFormat.day(start);
+	}
+
+	@JsonIgnore
+	public long getTime() {
+		return end.getTime() - start.getTime();
+	}
+
+	@JsonIgnore
+	public String getTimeFormatted() {
+		long millis = getTime();
+		return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+		        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+		        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+	}
+
+	@JsonIgnore
+	public double getSpeed() {
+		long time = (int) getTime();
+		double distance = getRoute().getDistance();
+		double hour = (double) time / (1000 * 60 * 60);
+		double km = distance / 1000;
+		return km / hour;
 	}
 
 	public Route getRoute() {

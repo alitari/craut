@@ -10,10 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import de.craut.util.AdvancedDateFormat;
-
 @Entity
 @Table(name = "route")
 public class Route implements Serializable {
@@ -25,9 +21,6 @@ public class Route implements Serializable {
 
 	@Column(name = "rt_name", nullable = false)
 	private String name;
-
-	@Column(name = "rt_start", nullable = true)
-	private Date start;
 
 	@Column(name = "rt_start_latitude", nullable = false)
 	private double startLatitude;
@@ -41,13 +34,18 @@ public class Route implements Serializable {
 	@Column(name = "rt_end_longitude", nullable = false)
 	private double endLongitude;
 
+	@Column(name = "rt_distance", nullable = false)
+	private double distance;
+
+	@Column(name = "rt_elevation", nullable = true)
+	private int elevation;
+
 	protected Route() {
 	}
 
 	public Route(String name, Date start) {
 		super();
 		this.name = name;
-		this.start = start;
 	}
 
 	public long getId() {
@@ -60,14 +58,6 @@ public class Route implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Date getStart() {
-		return start;
-	}
-
-	public void setStart(Date start) {
-		this.start = start;
 	}
 
 	public double getStartLatitude() {
@@ -102,9 +92,20 @@ public class Route implements Serializable {
 		this.endLongitude = endLongitude;
 	}
 
-	@JsonIgnore
-	public String getStartDay() {
-		return AdvancedDateFormat.day(start);
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
+	public int getElevation() {
+		return elevation;
+	}
+
+	public void setElevation(int elevation) {
+		this.elevation = elevation;
 	}
 
 	@Override

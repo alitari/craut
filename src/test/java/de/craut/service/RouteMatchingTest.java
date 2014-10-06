@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.data.geo.Point;
@@ -37,10 +36,8 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 		assertThat(routePoints.get(0).getLatitude(), is(points.get(0).getX()));
 		assertThat(routePoints.get(0).getLongitude(), is(points.get(0).getY()));
 
-		List<GpxTrackPoint> trkPoints = Arrays
-		        .asList(new GpxTrackPoint[] { new GpxTrackPoint(65.34, 23.4644, DateUtils.toCalendar(new Date()), 0),
-		                new GpxTrackPoint(65.35, 23.5644, DateUtils.toCalendar(new Date()), 0),
-		                new GpxTrackPoint(65.36, 23.6644, DateUtils.toCalendar(new Date()), 0) });
+		List<GpxTrackPoint> trkPoints = Arrays.asList(new GpxTrackPoint[] { new GpxTrackPoint(65.34, 23.4644, new Date(), 0),
+		        new GpxTrackPoint(65.35, 23.5644, new Date(), 0), new GpxTrackPoint(65.36, 23.6644, new Date(), 0) });
 		Map<Activity, List<ActivityPoint>> activities = activityService.createActivities(trkPoints);
 		Activity activity = activities.keySet().iterator().next();
 		assertThat(activity.getRoute().getId(), is(route.getId()));

@@ -1,6 +1,5 @@
 package de.craut.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -104,14 +103,5 @@ public class RouteController extends AbstractController {
 		List<Double> routePointsLatLng = fillLatLng(routePoints);
 		model.addAttribute("routePoints", routePointsLatLng);
 
-	}
-
-	private List<Double> fillLatLng(List<RoutePoint> routePoints) {
-		List<Double> latLngs = new ArrayList<Double>();
-		for (RoutePoint routePoint : routePoints) {
-			latLngs.add(routePoint.getLatitude());
-			latLngs.add(routePoint.getLongitude());
-		}
-		return latLngs;
 	}
 }

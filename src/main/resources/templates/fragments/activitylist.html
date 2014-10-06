@@ -32,13 +32,13 @@
 				</tr>
 				<tr th:each="activity : ${activities}">
 					<td th:text="${activity.id}">122</td>
-					<td th:text="${activity.name}">Kaltenbronn</td>
+					<td> <a th:text="${activity.name}" th:href="@{/activities/edit(id=${activity.id})}" href="#" >Kaltenbronn </a></td>
 					<td th:text="${activity.startDay}">3 days ago</td>
 					<td ><a th:text="${activity.route.name}" th:href="@{/routes/edit(id=${activity.route.id})}" href="#">Kaltenbronn </a></td>
                 </tr>
 			</table>
 
-			<a href="#" class="button button-reversed">Next</a>
+			
 
 		</article>
 

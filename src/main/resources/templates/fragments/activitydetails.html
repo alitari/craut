@@ -39,48 +39,39 @@
 		</script>
 
 		<article>
-			<h3 th:text="${route}">Route (id:23) Details</h3>
+			<h3 th:text="'Activity '+${activity.name}+' '+${route.name}">Activity 23.04.2014</h3>
 			<table>
 				<tr>
 					<td valign="top">
 						<fieldset>
 
-							<legend>Basic</legend>
-							<form action="edited" method="get">
+							<legend>Route</legend>
 								<p>
-									<label for="name">Name:</label> <input th:value="${route.name}" type="text" name="name" id="name" />
+									<label for="name">Name:</label> <input th:value="${route.name}" type="text" name="name" id="name" disabled="disabled"/>
 								</p>
-								
-								<input type="hidden" name="id" th:value="${route.id}" />
 								<p>
-									<input type="submit" name="send" class="formbutton" value="Update" />
+									<label for="distance">Distance (km):</label> <input th:value="${#numbers.formatDecimal(route.distance/1000,3,2,'COMMA')}" disabled="disabled"
+										type="text" name="distance" id="distance" />
 								</p>
-							</form>
+								<p>
+									<label for="elevation">Elevation (m):</label> <input th:value="${#numbers.formatDecimal(route.elevation/1000,3,2,'COMMA')}" disabled="disabled"
+										type="text" name="elevation" id="elevation" />
+								</p>
 
 						</fieldset>
 					</td>
 					<td valign="top">
 						<fieldset>
-
-							<legend>Details</legend>
-							<form action="#" method="get">
+							<legend>Activity</legend>
 								<p>
-									<label for="points">Points count:</label> <input th:value="${#lists.size(routePoints)/2 }" disabled="disabled"
-										type="text" name="points" id="points" />
+									<label for="time">Time:</label> <input th:value="${activity.timeFormatted}" disabled="disabled"
+										type="text" name="time" id="time" />
 								</p>
+								
 								<p>
-									<label for="distance">Distance (km):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.routeDistance/1000,3,2,'COMMA')}" disabled="disabled"
-										type="text" name="distance" id="distance" />
+									<label for="speed">Speed :</label> <input th:value="${#numbers.formatDecimal(activity.speed,3,2,'COMMA')}+' (km/h)'" disabled="disabled"
+										type="text" name="speed" id="speed" />
 								</p>
-								<p>
-									<label for="maxdistance">Max Point Distance(m):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.maxDistance,3,2,'COMMA')}" disabled="disabled"
-										type="text" name="maxdistance" id="maxdistance" />
-								</p>
-								<p>
-									<label for="mindistance">Min Point Distance(m):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.minDistance,3,2,'COMMA')}" disabled="disabled"
-										type="text" name="mindistance" id="mindistance" />
-								</p>
-							</form>
 
 						</fieldset>
 					</td>

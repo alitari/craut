@@ -8,7 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,10 +36,10 @@ public class GPXParser {
 	private List<GpxTrackPoint> trackPoints;
 
 	public static class GpxTrackPoint extends Point {
-		public final Calendar time;
+		public final Date time;
 		public int elevation;
 
-		public GpxTrackPoint(double latitude, double longitude, Calendar time, int elevation) {
+		public GpxTrackPoint(double latitude, double longitude, Date time, int elevation) {
 			super(latitude, longitude);
 			this.time = time;
 			this.elevation = elevation;
@@ -138,7 +137,7 @@ public class GPXParser {
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			if (localName.equals("trkpt")) {
-				Calendar time = parseTime(timeStr);
+				Date time = parseTime(timeStr);
 				GpxTrackPoint routePoint = new GpxTrackPoint(Double.parseDouble(latitude), Double.parseDouble(longitude), time,
 				        StringUtils.isNumeric(elevation) ? Integer.parseInt(elevation) : 0);
 				trackPoints.add(routePoint);
@@ -190,18 +189,17 @@ public class GPXParser {
 		}
 	}
 
-	Calendar parseTime(String dateStr) {
+	Date parseTime(String dateStr) {
 		if (StringUtils.isEmpty(dateStr)) {
 			return null;
 		}
-		Date parse;
+		Date date;
 		try {
-			parse = dateFormat.parse(dateStr);
+			date = dateFormat.parse(dateStr);
 		} catch (ParseException e) {
 			throw new ParsingException("Can't parse time", e);
 		}
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(parse);
-		return calendar;
+
+		return date;
 	}
 }
