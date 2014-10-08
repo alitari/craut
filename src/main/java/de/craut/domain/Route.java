@@ -1,22 +1,23 @@
 package de.craut.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+@SequenceGenerator(name = "pk_sequence", sequenceName = "route_seq", allocationSize = 1)
 @Entity
 @Table(name = "route")
 public class Route implements Serializable {
 
 	@Id()
 	@Column(name = "rt_id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "pk_sequence")
 	private long id;
 
 	@Column(name = "rt_name", nullable = false)
@@ -43,7 +44,7 @@ public class Route implements Serializable {
 	protected Route() {
 	}
 
-	public Route(String name, Date start) {
+	public Route(String name) {
 		super();
 		this.name = name;
 	}

@@ -17,12 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.craut.domain.Activity;
 import de.craut.domain.ActivityPoint;
-import de.craut.domain.Route;
-import de.craut.domain.RoutePoint;
 import de.craut.service.ActivityService;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
-import de.craut.util.geocalc.GpxPointStatistics;
-import de.craut.util.geocalc.GpxUtils;
 
 @Controller
 @RequestMapping("/activities")
@@ -92,17 +88,10 @@ public class ActivityController extends AbstractController {
 
 	private void fillActivity(Model model, Long id) {
 		// Route route = routeService.fetchRoute(id);
-
 		List<ActivityPoint> activityPoints = activityService.fetchActivityPoints(id);
-		Activity activity = activityPoints.get(0).getActivity();
+		Activity activity = activityService.fetchActivity(id);
+		model.addAttribute("activityPoints", activityPoints);
 		model.addAttribute("activity", activity);
-		Route route = activity.getRoute();
-		model.addAttribute("route", route);
-		List<RoutePoint> routePoints = routeService.fetchRoutePoints(route);
-		GpxPointStatistics gpxStatistics = GpxUtils.getStatistics(routePoints);
-		model.addAttribute("gpxStatistics", gpxStatistics);
-		List<Double> routePointsLatLng = fillLatLng(routePoints);
-		model.addAttribute("routePoints", routePointsLatLng);
 
 	}
 

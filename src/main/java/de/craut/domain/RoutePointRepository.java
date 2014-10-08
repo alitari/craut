@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface RoutePointRepository extends CrudRepository<RoutePoint, Long> {
 
-	List<RoutePoint> findByRoute(Route route);
+	List<RoutePoint> findByRouteId(long routeId);
 
 }

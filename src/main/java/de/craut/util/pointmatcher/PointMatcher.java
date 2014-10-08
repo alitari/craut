@@ -1,20 +1,16 @@
 package de.craut.util.pointmatcher;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.geo.Point;
 
-import de.craut.domain.Activity;
-import de.craut.domain.ActivityPoint;
-import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
 import de.craut.util.geocalc.EarthCalc;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
-public abstract class PointMatcher<G extends Point, R extends Point, A> {
+public abstract class PointMatcher<G extends GpxTrackPoint, R extends RoutePoint, A> {
 
 	private final static Logger logger = Logger.getLogger(PointMatcher.class);
 
@@ -22,12 +18,13 @@ public abstract class PointMatcher<G extends Point, R extends Point, A> {
 	protected final List<R> routepoints;
 	protected final List<A> matchedPoints;
 
-	double currentDistance = -1;
-	int trackPointCounter = 1;
-	int currentRoutePointPos;
-	int currentGpxTrackPointPos;
+	protected double currentDistance = -1;
+	protected int trackPointCounter = 1;
+	protected int currentRoutePointPos;
+	protected int currentGpxTrackPointPos;
+	protected double currentTrackPointSpeed;
 
-	boolean inMatch;
+	protected boolean inMatch;
 
 	public PointMatcher(List<G> gpxPoints, List<R> routepoints) {
 		super();
@@ -48,9 +45,11 @@ public abstract class PointMatcher<G extends Point, R extends Point, A> {
 	public List<A> start() {
 		currentGpxTrackPointPos = 0;
 		currentRoutePointPos = 0;
+		currentTrackPointSpeed = 0;
 		logger.debug("start Matching " + gpxTrackpoints.size() + " trackpoints to " + routepoints.size() + " routePoints.");
 
 		while (currentGpxTrackPointPos < gpxTrackpoints.size() && currentRoutePointPos < routepoints.size()) {
+			currentTrackPointSpeed = calculateTrackpointSpeed();
 			currentDistance = calculateDistance();
 			if (currentDistance < 100) {
 				logger.debug("distance(" + currentGpxTrackPointPos + "," + currentRoutePointPos + ") =" + currentDistance);
@@ -65,6 +64,18 @@ public abstract class PointMatcher<G extends Point, R extends Point, A> {
 		}
 		finish();
 		return matchedPoints;
+	}
+
+	private double calculateTrackpointSpeed() {
+		if (currentGpxTrackPointPos == 0)
+			return 0;
+		GpxTrackPoint previousGpxTrackPoint = gpxTrackpoints.get(currentGpxTrackPointPos - 1);
+		GpxTrackPoint currentGpxTrackPoint = gpxTrackpoints.get(currentGpxTrackPointPos);
+		double distance = EarthCalc.getDistance(currentGpxTrackPoint, previousGpxTrackPoint);
+		long time = currentGpxTrackPoint.time.getTime() - previousGpxTrackPoint.time.getTime();
+		double timeHours = (double) time / (1000 * 60 * 60);
+		double distanceInKm = distance / 1000;
+		return distanceInKm / timeHours;
 	}
 
 	protected abstract void allways();
@@ -87,7 +98,7 @@ public abstract class PointMatcher<G extends Point, R extends Point, A> {
 
 	protected abstract A createResult(G gpxPoint, R routePoint);
 
-	public static abstract class First<G extends Point, R extends Point, A> extends PointMatcher<G, R, A> {
+	public static abstract class First<G extends GpxTrackPoint, R extends RoutePoint, A> extends PointMatcher<G, R, A> {
 
 		public First(List<G> gpxPoints, List<R> routepoints) {
 			super(gpxPoints, routepoints);
@@ -109,7 +120,7 @@ public abstract class PointMatcher<G extends Point, R extends Point, A> {
 
 	}
 
-	public static abstract class Closest<G extends Point, R extends Point, A> extends PointMatcher<G, R, A> {
+	public static abstract class Closest<G extends GpxTrackPoint, R extends RoutePoint, A> extends PointMatcher<G, R, A> {
 
 		protected G bestCandidate;
 		protected int bestCandidatePos = -1;
@@ -156,35 +167,6 @@ public abstract class PointMatcher<G extends Point, R extends Point, A> {
 			}
 
 			super.finish();
-		}
-
-	}
-
-	public static class ActivityMatchTreshHold20 extends Closest<GpxTrackPoint, RoutePoint, ActivityPoint> {
-
-		private Activity activity;
-
-		public ActivityMatchTreshHold20(List<GpxTrackPoint> gpxPoints, List<RoutePoint> routepoints) {
-			super(gpxPoints, routepoints);
-			Route route = routepoints.get(0).getRoute();
-			Date date = gpxPoints.get(0).time;
-			activity = new Activity("Activity " + date + " " + route.getName(), route, null, null);
-		}
-
-		@Override
-		protected double calculateDistance() {
-			return EarthCalc.getDistance(gpxTrackpoints.get(currentGpxTrackPointPos), routepoints.get(currentRoutePointPos));
-		}
-
-		@Override
-		protected ActivityPoint createResult(GpxTrackPoint gpxTrackPoint, RoutePoint routePoint) {
-			ActivityPoint activityPoint = new ActivityPoint(activity, routePoint, gpxTrackPoint.time);
-			return activityPoint;
-		}
-
-		@Override
-		protected boolean isMatch() {
-			return currentDistance < 20;
 		}
 
 	}

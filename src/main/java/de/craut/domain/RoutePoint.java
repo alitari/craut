@@ -5,24 +5,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.springframework.data.geo.Point;
 
+@SequenceGenerator(name = "pk_sequence", sequenceName = "route_point_seq", allocationSize = 1)
 @Entity
 @Table(name = "route_point")
 public class RoutePoint extends Point {
 
 	@Id()
 	@Column(name = "rp_id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "pk_sequence")
 	private long id;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "rp_rt_id", referencedColumnName = "rt_id")
-	private Route route;
+	@Column(name = "rp_rt_id")
+	private long routeId;
 
 	@Column(name = "rp_seq", nullable = false)
 	private int sequence;
@@ -33,20 +32,27 @@ public class RoutePoint extends Point {
 	@Column(name = "rp_longitude", nullable = false)
 	private double longitude;
 
-	public RoutePoint(Route route, int sequence, String latitude, String longitude) {
-		this(route, sequence, Double.parseDouble(latitude), Double.parseDouble(longitude));
+	@Column(name = "rp_elevation", nullable = false)
+	private int elevation;
+
+	public RoutePoint(int sequence, String latitude, String longitude, int elevation) {
+		this(sequence, Double.parseDouble(latitude), Double.parseDouble(longitude), elevation);
 	}
 
 	protected RoutePoint() {
 		super(0, 0);
 	}
 
-	public RoutePoint(Route route, int sequence, double latitude, double longitude) {
+	public RoutePoint(double latitude, double longitude) {
+		this(0, latitude, longitude, 0);
+	}
+
+	public RoutePoint(int sequence, double latitude, double longitude, int elevation) {
 		super(latitude, longitude);
 		this.sequence = sequence;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.setRoute(route);
+		this.elevation = elevation;
 	}
 
 	public long getId() {
@@ -87,6 +93,22 @@ public class RoutePoint extends Point {
 		this.sequence = sequence;
 	}
 
+	public long getRouteId() {
+		return routeId;
+	}
+
+	public void setRoute(long route) {
+		this.routeId = route;
+	}
+
+	public int getElevation() {
+		return elevation;
+	}
+
+	public void setElevation(int elevation) {
+		this.elevation = elevation;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
@@ -116,14 +138,6 @@ public class RoutePoint extends Point {
 	@Override
 	public String toString() {
 		return "Point{" + "latitude=" + latitude + ", longitude=" + longitude + '}';
-	}
-
-	public Route getRoute() {
-		return route;
-	}
-
-	public void setRoute(Route route) {
-		this.route = route;
 	}
 
 }

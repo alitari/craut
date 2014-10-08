@@ -10,4 +10,8 @@ public class AdvancedDateFormat {
 		return diff == 1 ? "YESTERDAY" : diff > 1 ? String.valueOf(diff) + " " + "DAYS AGO" : "TODAY";
 	}
 
+	public static String day(long time) {
+		return day(new Date(time));
+	}
+
 }

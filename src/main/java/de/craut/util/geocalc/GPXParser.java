@@ -37,12 +37,24 @@ public class GPXParser {
 
 	public static class GpxTrackPoint extends Point {
 		public final Date time;
-		public int elevation;
+		public final int elevation;
+		public final int heartRate;
+		public final int power;
+		public final int cadence;
+		public final double temperature;
 
-		public GpxTrackPoint(double latitude, double longitude, Date time, int elevation) {
+		public GpxTrackPoint(double latitude, double longitude) {
+			this(latitude, longitude, new Date(), 1, 0, 0, 0, 0);
+		}
+
+		public GpxTrackPoint(double latitude, double longitude, Date time, int elevation, int heartRate, int power, int cadence, double temperature) {
 			super(latitude, longitude);
 			this.time = time;
 			this.elevation = elevation;
+			this.heartRate = heartRate;
+			this.power = power;
+			this.cadence = cadence;
+			this.temperature = temperature;
 		}
 
 		public double getLatitude() {
@@ -100,6 +112,9 @@ public class GPXParser {
 		String longitude = "";
 		String timeStr = "";
 		String elevation = "";
+		String heartRate = "";
+		String cadence = "";
+		String power = "";
 
 		@Override
 		public void startDocument() throws SAXException {
@@ -122,15 +137,28 @@ public class GPXParser {
 				timeStr = "ready";
 			} else if (localName.equals("ele")) {
 				elevation = "ready";
+			} else if (localName.equals("hr")) {
+				heartRate = "ready";
+			} else if (localName.equals("cad")) {
+				cadence = "ready";
+			} else if (localName.equals("power")) {
+				power = "ready";
 			}
 		}
 
 		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
+			char[] copyOfRange = Arrays.copyOfRange(ch, start, start + length);
 			if (timeStr.equals("ready")) {
-				timeStr = new String(Arrays.copyOfRange(ch, start, start + length));
+				timeStr = new String(copyOfRange);
 			} else if (elevation.equals("ready")) {
-				elevation = new String(Arrays.copyOfRange(ch, start, start + length));
+				elevation = new String(copyOfRange);
+			} else if (heartRate.equals("ready")) {
+				heartRate = new String(copyOfRange);
+			} else if (cadence.equals("ready")) {
+				cadence = new String(copyOfRange);
+			} else if (power.equals("ready")) {
+				power = new String(copyOfRange);
 			}
 		}
 
@@ -138,8 +166,13 @@ public class GPXParser {
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			if (localName.equals("trkpt")) {
 				Date time = parseTime(timeStr);
-				GpxTrackPoint routePoint = new GpxTrackPoint(Double.parseDouble(latitude), Double.parseDouble(longitude), time,
-				        StringUtils.isNumeric(elevation) ? Integer.parseInt(elevation) : 0);
+				String eleCut = StringUtils.substringBefore(elevation, ".");
+				int ele = StringUtils.isNumeric(eleCut) ? Integer.parseInt(eleCut) : 0;
+				int hr = StringUtils.isNumeric(heartRate) ? Integer.parseInt(heartRate) : 0;
+				int pow = StringUtils.isNumeric(power) ? Integer.parseInt(power) : 0;
+				int cad = StringUtils.isNumeric(cadence) ? Integer.parseInt(cadence) : 0;
+
+				GpxTrackPoint routePoint = new GpxTrackPoint(Double.parseDouble(latitude), Double.parseDouble(longitude), time, ele, hr, pow, cad, 0);
 				trackPoints.add(routePoint);
 			}
 		}

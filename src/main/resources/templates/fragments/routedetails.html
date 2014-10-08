@@ -8,6 +8,9 @@
 <link href="D:\ws\git\craut\src\main\resources\static\css\styles.css" rel="stylesheet" type="text/css" />
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 <script src="/js/routeDetailsMap.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="/js/profile.js"></script>
+
 <!--[if lt IE 9]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
@@ -25,16 +28,42 @@
          /*<![CDATA[*/
          
         	var flightPlanCoordinates = [new google.maps.LatLng( -34.397, 150.644),new google.maps.LatLng( -24.397, 144.644)];
-        	
         	var routePoints = /*[[${routePoints}]]*/;
-
             
-         
-        for (var i = 0; i < routePoints.length; i+=2) { 
-          flightPlanCoordinates[i/2] = new google.maps.LatLng( routePoints[i] , routePoints[i+1]) 
-        } 
-
+            for (var i = 0; i < routePoints.length; i++) { 
+              flightPlanCoordinates[i] = new google.maps.LatLng( routePoints[i].latitude , routePoints[i].longitude) 
+            } 
+                        
         	google.maps.event.addDomListener(window, 'load', initialize);
+            
+            // Load the Visualization API and the piechart package.
+            google.load('visualization', '1.0', {'packages':['corechart']});
+      
+            
+           // Set a callback to run when the Google Visualization API is loaded.
+            google.setOnLoadCallback(drawChart);
+					
+            function drawChart() {
+       
+               var elevationArray = [['Point', 'Height']];
+               for (var i = 0; i < routePoints.length; i++) { 
+                  elevationArray[i+1] = [routePoints[i].seq,routePoints[i].elevation] 
+               }
+	            var profileData = google.visualization.arrayToDataTable(elevationArray,false); 
+
+            	var options = {
+		           title : 'Route Elevation',
+		           
+		           legend : { position: 'none' }
+			
+	            };
+
+	            var chart = new google.visualization.AreaChart(document.getElementById('chart-canvas'));
+	            chart.draw(profileData, options);
+           }
+            
+                 
+        	
         /*]]>*/
 		</script>
 
@@ -48,13 +77,19 @@
 							<legend>Basic</legend>
 							<form action="edited" method="get">
 								<p>
-									<label for="name">Name:</label> <input th:value="${route.name}" type="text" name="name" id="name" />
+									<label for="name">Name:</label><br/> <input th:value="${route.name}" type="text" name="name" id="name" />
 								</p>
-								
-								<input type="hidden" name="id" th:value="${route.id}" />
 								<p>
 									<input type="submit" name="send" class="formbutton" value="Update" />
 								</p>
+								<p>
+									<label for="distance">Distance:</label><br/> <input th:value="${#numbers.formatDecimal(route.distance/1000,0,2,'COMMA')}+' km'" readonly="readonly" name="distance" id="distance" />
+								</p>
+								<p>
+									<label for="elevation">Elevation:</label><br/> <input th:value="${#numbers.formatInteger(route.elevation,0)}+' m'" readonly="readonly"  name="distance" id="distance" />
+								</p>
+								
+								<input type="hidden" name="id" th:value="${route.id}" />
 							</form>
 
 						</fieldset>
@@ -65,19 +100,16 @@
 							<legend>Details</legend>
 							<form action="#" method="get">
 								<p>
-									<label for="points">Points count:</label> <input th:value="${#lists.size(routePoints)/2 }" disabled="disabled"
+									<label for="points">Points count:</label> <br/><input th:value="${#lists.size(routePoints) }" disabled="disabled"
 										type="text" name="points" id="points" />
 								</p>
+								
 								<p>
-									<label for="distance">Distance (km):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.routeDistance/1000,3,2,'COMMA')}" disabled="disabled"
-										type="text" name="distance" id="distance" />
-								</p>
-								<p>
-									<label for="maxdistance">Max Point Distance(m):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.maxDistance,3,2,'COMMA')}" disabled="disabled"
+									<label for="maxdistance">Max Point Distance(m):</label><br/> <input th:value="${#numbers.formatDecimal(gpxStatistics.maxDistance,3,2,'COMMA')}" disabled="disabled"
 										type="text" name="maxdistance" id="maxdistance" />
 								</p>
 								<p>
-									<label for="mindistance">Min Point Distance(m):</label> <input th:value="${#numbers.formatDecimal(gpxStatistics.minDistance,3,2,'COMMA')}" disabled="disabled"
+									<label for="mindistance">Min Point Distance(m):</label> <br/><input th:value="${#numbers.formatDecimal(gpxStatistics.minDistance,3,2,'COMMA')}" disabled="disabled"
 										type="text" name="mindistance" id="mindistance" />
 								</p>
 							</form>
@@ -86,13 +118,21 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
+					<td >
 						<fieldset>
 							<legend>Map</legend>
-							<div id="map-canvas" style="height: 100px"></div>
+							<div id="map-canvas" style="height: 170px"></div>
 
 						</fieldset>
 					</td>
+					<td >
+						<fieldset>
+							<legend>Profile</legend>
+							<div id="chart-canvas" style="height: 170px"></div>
+
+						</fieldset>
+					</td>
+					
 				</tr>
 			</table>
 

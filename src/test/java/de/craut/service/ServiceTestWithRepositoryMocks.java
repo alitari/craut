@@ -1,11 +1,11 @@
 package de.craut.service;
 
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -53,16 +53,18 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 	}
 
 	protected Route setupRoute(long id, String name, double... points) {
-		Route route = new Route(name, new Date());
+		Route route = new Route(name);
 		allRoutes.add(route);
 		when(routeRepository.findOne(id)).thenReturn(route);
 		List<RoutePoint> routePoints = new ArrayList<RoutePoint>();
 		int i = 0;
 		while (i < points.length) {
-			routePoints.add(new RoutePoint(route, i / 2, points[i], points[i + 1]));
+			RoutePoint routePoint = new RoutePoint(i / 2, points[i], points[i + 1], i);
+			routePoint.setRoute(id);
+			routePoints.add(routePoint);
 			i += 2;
 		}
-		when(routePointRepository.findByRoute(route)).thenReturn(routePoints);
+		when(routePointRepository.findByRouteId(anyLong())).thenReturn(routePoints);
 		return route;
 
 	}

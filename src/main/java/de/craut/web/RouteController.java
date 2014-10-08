@@ -2,6 +2,7 @@ package de.craut.web;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,21 +72,14 @@ public class RouteController extends AbstractController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String upload(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, Model model) {
-		List<GpxTrackPoint> trkPoints = parseGpxFile(file);
-		GpxPointStatistics statistics = GpxUtils.getStatistics(trkPoints);
-		String message = null;
-		if (statistics.getMinDistance() < 5) {
-			message = " min Point distance=" + statistics.getMinDistance();
-		} else if (statistics.getRouteDistance() > 30000) {
-			message = " route distance=" + statistics.getRouteDistance();
-		} else if (statistics.getTrkPointCount() > 500) {
-			message = " trackpointCount=" + statistics.getTrkPointCount();
+		if (StringUtils.isEmpty(name)) {
+			name = "No Name " + System.currentTimeMillis();
 		}
+		List<GpxTrackPoint> trkPoints = parseGpxFile(file);
 
-		if (message != null) {
-			model.addAttribute("uploadMessage", "No routes matches.");
-		} else {
-			routeService.saveRoute(name, trkPoints);
+		Route saveRoute = routeService.saveRoute(name, trkPoints);
+		if (saveRoute == null) {
+			model.addAttribute("uploadMessage", "Route data not correct.");
 		}
 
 		fillPageContent(model);
@@ -100,8 +94,7 @@ public class RouteController extends AbstractController {
 		model.addAttribute("gpxStatistics", gpxStatistics);
 
 		model.addAttribute("route", route);
-		List<Double> routePointsLatLng = fillLatLng(routePoints);
-		model.addAttribute("routePoints", routePointsLatLng);
+		model.addAttribute("routePoints", routePoints);
 
 	}
 }

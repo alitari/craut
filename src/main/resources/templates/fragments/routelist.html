@@ -18,27 +18,54 @@
 <body>
     
 	<section th:fragment="content" id="content" class="column-right">
+	<script th:inline="javascript">
+         /*<![CDATA[*/
+         
+         var routes= /*[[${routes}]]*/;
+            var routeCoordinates = [[]];
+            for (var i = 0; i < routes.length; i++) { 
+              routeCoordinates[i] = [routes[i].name, routes[i].startLatitude, routes[i].startLongitude, i,routes[i].distance,routes[i].elevation,routes[i].id ] 
+            }
+         
+         google.maps.event.addDomListener(window, 'load', initialize);
+        	
+        /*]]>*/
+		</script>
+	
 
 		<article>
 
 			<h3>Routes</h3>
-			<table>
-				<tr>
-					<th>Id</th>
-					<th>Name</th>
-				</tr>
+			<table id="routes">
+				
 				<tr th:each="route : ${routes}">
-					<td> <a th:text="${route.id}" th:href="@{/routes/edit(id=${route.id})}">122</a></td>
-					<td> <a th:text="${route.name}" th:href="@{/routes/edit(id=${route.id})}">Kaltenbronn</a></td>
+<!-- 					<td> <a th:text="${route.id}" th:href="@{/routes/edit(id=${route.id})}">122</a></td> -->
+					<td> 
+					  <div><a th:text="${route.name}" th:href="@{/routes/edit(id=${route.id})}">Kaltenbronn</a></div>
+					  <div th:text="'Distance: '+ ${#numbers.formatDecimal(route.distance/1000,0,2,'COMMA')}+' km   Elevation: '+${route.elevation}+' m '">Distance: 30 km   Elevation: 200 m</div>
+					</td>
+					<td>
+					  <div>Leader: <a >: Alitari</a></div>
+<!-- 					  <a th:text="${routeLeader.name}" th:href="@{/users/edit(id=${routeLeader.id})}">Leader: Alitari</a> -->
+					  <div>Activities: 13 since 2 Weeks</div> 
+<!-- 					  <div th:text="'Activities: '+ ${activityInfo.count}+' since  '+${route.insertDate}+' m '">Activities: 13 since 2 Weeks</div> -->
+					</td>
+					<td>
+					  
+					</td>
                 </tr>
 			</table>
 
-			<a href="#" class="button button-reversed">Next</a>
-
-
+			
 
 		</article>
+		<article>
+			<fieldset>
+				<legend>Map</legend>
+				<div id="map-canvas" style="height: 170px"></div>
+			</fieldset>
 
+		</article>
 
 	</section>
 

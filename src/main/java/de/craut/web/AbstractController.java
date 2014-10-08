@@ -8,7 +8,6 @@ import java.util.List;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Point;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,15 +85,6 @@ public class AbstractController {
 		GPXParser gpxParser = new GPXParser();
 		List<GpxTrackPoint> trkPoints = gpxParser.parse(inputStream);
 		return trkPoints;
-	}
-
-	protected List<Double> fillLatLng(List<? extends Point> points) {
-		List<Double> latLngs = new ArrayList<Double>();
-		for (Point routePoint : points) {
-			latLngs.add(routePoint.getX());
-			latLngs.add(routePoint.getY());
-		}
-		return latLngs;
 	}
 
 }

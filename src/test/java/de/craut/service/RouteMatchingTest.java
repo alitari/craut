@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.data.geo.Point;
 
 import de.craut.domain.Activity;
 import de.craut.domain.ActivityPoint;
@@ -28,7 +27,8 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 	public void basic() throws Exception {
 
 		assertThat(routeService.fetchAllRoutes().size(), is(0));
-		List<? extends Point> points = Arrays.asList(new Point[] { new Point(65.34, 23.4644), new Point(65.35, 23.5644), new Point(65.36, 23.6644) });
+		List<? extends GpxTrackPoint> points = Arrays.asList(new GpxTrackPoint[] { new GpxTrackPoint(65.34, 23.4644), new GpxTrackPoint(65.35, 23.5644),
+		        new GpxTrackPoint(65.36, 23.6644) });
 		routeService.saveRoute(TEST_ROUTE, points);
 		Route route = routeService.fetchAllRoutes().get(0);
 		assertThat(route.getName(), is(TEST_ROUTE));
@@ -36,8 +36,8 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 		assertThat(routePoints.get(0).getLatitude(), is(points.get(0).getX()));
 		assertThat(routePoints.get(0).getLongitude(), is(points.get(0).getY()));
 
-		List<GpxTrackPoint> trkPoints = Arrays.asList(new GpxTrackPoint[] { new GpxTrackPoint(65.34, 23.4644, new Date(), 0),
-		        new GpxTrackPoint(65.35, 23.5644, new Date(), 0), new GpxTrackPoint(65.36, 23.6644, new Date(), 0) });
+		List<GpxTrackPoint> trkPoints = Arrays.asList(new GpxTrackPoint[] { new GpxTrackPoint(65.34, 23.4644, new Date(), 0, 0, 0, 0, 0),
+		        new GpxTrackPoint(65.35, 23.5644, new Date(), 0, 0, 0, 0, 0), new GpxTrackPoint(65.36, 23.6644, new Date(), 0, 0, 0, 0, 0) });
 		Map<Activity, List<ActivityPoint>> activities = activityService.createActivities(trkPoints);
 		Activity activity = activities.keySet().iterator().next();
 		assertThat(activity.getRoute().getId(), is(route.getId()));
@@ -47,7 +47,7 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 	@Ignore
 	public void files() throws Exception {
 		Route freiolsheim = saveRoute("Malsch-Freiolsheim");
-		Route roteLache = saveRoute("RoteLache2");
+		Route roteLache = saveRoute("RoteLache");
 
 		assertMatch("22-08-2014", freiolsheim);
 		assertMatch("24-04-2014", freiolsheim);

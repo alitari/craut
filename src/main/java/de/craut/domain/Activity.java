@@ -1,7 +1,6 @@
 package de.craut.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Column;
@@ -34,20 +33,56 @@ public class Activity implements Serializable {
 	private String name;
 
 	@Column(name = "ra_start", nullable = true)
-	private Date start;
+	private long start;
 
 	@Column(name = "ra_end", nullable = true)
-	private Date end;
+	private long end;
+
+	@Column(name = "ra_pow_avg", nullable = true)
+	private double powerAverage;
+
+	@Column(name = "ra_pow_max", nullable = true)
+	private int powerMax;
+
+	@Column(name = "ra_pow_min", nullable = true)
+	private int powerMin;
+
+	@Column(name = "ra_cad_avg", nullable = true)
+	private double cadenceAverage;
+
+	@Column(name = "ra_cad_max", nullable = true)
+	private int cadenceMax;
+
+	@Column(name = "ra_cad_min", nullable = true)
+	private int cadenceMin;
+
+	@Column(name = "ra_speed_avg", nullable = true)
+	private double speedAverage;
+
+	@Column(name = "ra_speed_max", nullable = true)
+	private double speedMax;
+
+	@Column(name = "ra_speed_min", nullable = true)
+	private double speedMin;
+
+	@Column(name = "ra_hr_avg", nullable = true)
+	private double heartRateAverage;
+
+	@Column(name = "ra_hr_max", nullable = true)
+	private int heartRateMax;
+
+	@Column(name = "ra_hr_min", nullable = true)
+	private int heartRateMin;
 
 	protected Activity() {
 	}
 
-	public Activity(String name, Route route, Date start, Date end) {
+	public Activity(String name, Route route, long start, long end) {
 		super();
 		this.name = name;
 		this.route = route;
 		this.start = start;
-		this.setEnd(end);
+		this.end = end;
 	}
 
 	public long getId() {
@@ -62,19 +97,19 @@ public class Activity implements Serializable {
 		this.name = name;
 	}
 
-	public Date getStart() {
+	public long getStart() {
 		return start;
 	}
 
-	public void setStart(Date start) {
+	public void setStart(long start) {
 		this.start = start;
 	}
 
-	public Date getEnd() {
+	public long getEnd() {
 		return end;
 	}
 
-	public void setEnd(Date end) {
+	public void setEnd(long end) {
 		this.end = end;
 	}
 
@@ -85,7 +120,7 @@ public class Activity implements Serializable {
 
 	@JsonIgnore
 	public long getTime() {
-		return end.getTime() - start.getTime();
+		return end - start;
 	}
 
 	@JsonIgnore
@@ -111,6 +146,102 @@ public class Activity implements Serializable {
 
 	public void setRoute(Route route) {
 		this.route = route;
+	}
+
+	public double getPowerAverage() {
+		return powerAverage;
+	}
+
+	public void setPowerAverage(double powerAverage) {
+		this.powerAverage = powerAverage;
+	}
+
+	public int getPowerMax() {
+		return powerMax;
+	}
+
+	public void setPowerMax(int powerMax) {
+		this.powerMax = powerMax;
+	}
+
+	public int getPowerMin() {
+		return powerMin;
+	}
+
+	public void setPowerMin(int powerMin) {
+		this.powerMin = powerMin;
+	}
+
+	public double getCadenceAverage() {
+		return cadenceAverage;
+	}
+
+	public void setCadenceAverage(double cadenceAverage) {
+		this.cadenceAverage = cadenceAverage;
+	}
+
+	public int getCadenceMax() {
+		return cadenceMax;
+	}
+
+	public void setCadenceMax(int cadenceMax) {
+		this.cadenceMax = cadenceMax;
+	}
+
+	public int getCadenceMin() {
+		return cadenceMin;
+	}
+
+	public void setCadenceMin(int cadenceMin) {
+		this.cadenceMin = cadenceMin;
+	}
+
+	public double getSpeedAverage() {
+		return speedAverage;
+	}
+
+	public void setSpeedAverage(double speedAverage) {
+		this.speedAverage = speedAverage;
+	}
+
+	public double getSpeedMax() {
+		return speedMax;
+	}
+
+	public void setSpeedMax(double speedMax) {
+		this.speedMax = speedMax;
+	}
+
+	public double getSpeedMin() {
+		return speedMin;
+	}
+
+	public void setSpeedMin(double speedMin) {
+		this.speedMin = speedMin;
+	}
+
+	public double getHeartRateAverage() {
+		return heartRateAverage;
+	}
+
+	public void setHeartRateAverage(double heartRateAverage) {
+		this.heartRateAverage = heartRateAverage;
+	}
+
+	public int getHeartRateMax() {
+		return heartRateMax;
+	}
+
+	public void setHeartRateMax(int heartRateMax) {
+		this.heartRateMax = heartRateMax;
+	}
+
+	public int getHeartRateMin() {
+		return heartRateMin;
+	}
+
+	public void setHeartRateMin(int heartRateMin) {
+		this.heartRateMin = heartRateMin;
 	}
 
 }

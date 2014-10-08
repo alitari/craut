@@ -23,70 +23,118 @@
 
 		<script th:inline="javascript">
          /*<![CDATA[*/
-         
         	var flightPlanCoordinates = [new google.maps.LatLng( -34.397, 150.644),new google.maps.LatLng( -24.397, 144.644)];
-        	
-        	var routePoints = /*[[${routePoints}]]*/;
-
-            
-         
-        for (var i = 0; i < routePoints.length; i+=2) { 
-          flightPlanCoordinates[i/2] = new google.maps.LatLng( routePoints[i] , routePoints[i+1]) 
-        } 
+        	var activityPoints= /*[[${activityPoints}]]*/;
+        	        	
+            for (var i = 0; i < activityPoints.length; i++) { 
+              flightPlanCoordinates[i] = new google.maps.LatLng( activityPoints[i].routePoint.latitude , activityPoints[i].routePoint.longitude) 
+            } 
 
         	google.maps.event.addDomListener(window, 'load', initialize);
+        	
+        	// Load the Visualization API and the piechart package.
+            google.load('visualization', '1.0', {'packages':['corechart']});
+      
+            
+           // Set a callback to run when the Google Visualization API is loaded.
+            google.setOnLoadCallback(drawChart);
+					
+            function drawChart() {
+       
+               var elevationArray = [['Point', 'Height', 'Speed']];
+               for (var i = 0; i < activityPoints.length; i++) { 
+                  elevationArray[i+1] = [activityPoints[i].routePoint.seq,activityPoints[i].routePoint.elevation,activityPoints[i].speed]
+               }
+	            var profileData = google.visualization.arrayToDataTable(elevationArray,false); 
+
+            	var options = {
+		           title : 'Route Elevation',
+		           
+		           legend : { position: 'none' },
+		           
+		           vAxes :[
+                             {title: 'Height'}, // Left axis
+                             {title: 'Speed', minValue: 0, maxValue: 70}
+                          ],
+                          
+                   series:[
+                              {targetAxisIndex:0},
+                              {targetAxisIndex:1}
+                          ]
+	            };
+
+	            var chart = new google.visualization.ComboChart(document.getElementById('chart-canvas'));
+	            chart.draw(profileData, options);
+           }
+        	
+        	
+        	
         /*]]>*/
 		</script>
 
 		<article>
-			<h3 th:text="'Activity '+${activity.name}+' '+${route.name}">Activity 23.04.2014</h3>
+			<h3 th:text="'Activity '+${activity.name}+' '+${activity.route.name}">Activity 23.04.2014</h3>
 			<table>
 				<tr>
 					<td valign="top">
-						<fieldset>
-
-							<legend>Route</legend>
+          			<fieldset>
 								<p>
-									<label for="name">Name:</label> <input th:value="${route.name}" type="text" name="name" id="name" disabled="disabled"/>
+									<label for="name">Route:</label><br/> <input th:value="${activity.route.name}" type="text" name="name" id="name" readonly="readonly"/>
 								</p>
 								<p>
-									<label for="distance">Distance (km):</label> <input th:value="${#numbers.formatDecimal(route.distance/1000,3,2,'COMMA')}" disabled="disabled"
+									<label for="distance">Distance:</label><br/> <input th:value="${#numbers.formatDecimal(activity.route.distance/1000,0,2,'COMMA')}+' km'" readonly="readonly"
 										type="text" name="distance" id="distance" />
 								</p>
 								<p>
-									<label for="elevation">Elevation (m):</label> <input th:value="${#numbers.formatDecimal(route.elevation/1000,3,2,'COMMA')}" disabled="disabled"
-										type="text" name="elevation" id="elevation" />
+									<label for="elevation">Climb:</label><br/> <input th:value="${#numbers.formatInteger(activity.route.elevation,0)}+' m'" readonly="readonly"  name="elevation" id="elevation" />
 								</p>
-
-						</fieldset>
-					</td>
-					<td valign="top">
-						<fieldset>
-							<legend>Activity</legend>
 								<p>
-									<label for="time">Time:</label> <input th:value="${activity.timeFormatted}" disabled="disabled"
+									<label for="time">Time:</label> <br/><input th:value="${activity.timeFormatted}" readonly="readonly"
 										type="text" name="time" id="time" />
 								</p>
 								
 								<p>
-									<label for="speed">Speed :</label> <input th:value="${#numbers.formatDecimal(activity.speed,3,2,'COMMA')}+' (km/h)'" disabled="disabled"
+									<label for="speed">Speed:</label><br/> <input th:value="${#numbers.formatDecimal(activity.speed,0,2,'COMMA')}+' km/h'" readonly="readonly"
 										type="text" name="speed" id="speed" />
 								</p>
+					   </fieldset>
 
-						</fieldset>
+					</td>
+
+					<td valign="top">
+					<fieldset>
+								<p>
+									<label for="speedDetails">Speed Avg/Min/Max (km/h):</label><br/> <input th:value="${#numbers.formatDecimal(activity.speedAverage,0,2,'COMMA')}+' / '+${#numbers.formatDecimal(activity.speedMin,0,2,'COMMA')}+' / '+${#numbers.formatDecimal(activity.speedMax,0,2,'COMMA')}" readonly="readonly"
+										type="text" name="speedDetails" id="speedDetails" />
+								</p>
+								<p>
+									<label for="cadenceDetails">Cadence Avg/Min/Max:</label><br/> <input th:value="${#numbers.formatDecimal(activity.cadenceAverage,0,0,'COMMA')}+' / '+${#numbers.formatDecimal(activity.cadenceMin,0,0,'COMMA')}+' / '+${#numbers.formatDecimal(activity.cadenceMax,0,0,'COMMA')}" readonly="readonly"
+										type="text" name="cadenceDetails" id="cadenceDetails" />
+								</p>
+								
+								<p>
+									<label for="heartRateDetails">HeartRate Avg/Min/Max:</label><br/> <input th:value="${#numbers.formatDecimal(activity.heartRateAverage,0,0,'COMMA')}+' / '+${#numbers.formatDecimal(activity.heartRateMin,0,0,'COMMA')}+' / '+${#numbers.formatDecimal(activity.heartRateMax,0,0,'COMMA')}" readonly="readonly"
+										type="text" name="heartRateDetails" id="heartRateDetails" />
+								</p>
+								
+								<p>
+									<label for="powerDetails">Power Avg/Min/Max:</label><br/> <input th:value="${#numbers.formatDecimal(activity.powerAverage,0,0,'COMMA')}+' / '+${#numbers.formatDecimal(activity.powerMin,0,0,'COMMA')}+' / '+${#numbers.formatDecimal(activity.powerMax,0,0,'COMMA')}" readonly="readonly"
+										type="text" name="powerDetails" id="powerDetails" />
+								</p>
+								</fieldset>
+								
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						<fieldset>
-							<legend>Map</legend>
-							<div id="map-canvas" style="height: 100px"></div>
-
-						</fieldset>
+					<td >
+							<div id="map-canvas" style="height: 170px"></div>
 					</td>
+					<td >
+							<div id="chart-canvas" style="height: 170px"></div>
+					</td>
+					
 				</tr>
 			</table>
-
 		</article>
 
 

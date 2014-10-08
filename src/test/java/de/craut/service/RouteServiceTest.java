@@ -11,13 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.data.geo.Point;
 
 import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
@@ -29,6 +28,7 @@ import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
 import de.craut.domain.RoutePointRepository;
 import de.craut.domain.RouteRepository;
+import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
 public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteService> {
 
@@ -54,7 +54,7 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 	@Test
 	public void update() {
 		setupRoute(ID1, NAME1);
-		Route event = new Route("zewgez", new Date());
+		Route event = new Route("zewgez");
 		underTest.updateRoute(event);
 		verify(routeRepository, times(1)).save(event);
 	}
@@ -70,35 +70,100 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 	public void getRoutePoints() {
 		setupRoute(ID1, NAME1);
 		underTest.fetchRoutePoints(allRoutes.get(0));
-		verify(routePointRepository, times(1)).findByRoute(allRoutes.get(0));
+		verify(routePointRepository, times(1)).findByRouteId(allRoutes.get(0).getId());
 	}
 
 	@Test
-	public void saveRoute() {
-
-		List<Point> points = Arrays.asList(new Point[] { new Point(3, 4), new Point(3.4844, 4.9545) });
+	public void saveRouteTakeAll() {
+		List<GpxTrackPoint> points = Arrays.asList(new GpxTrackPoint[] { new GpxTrackPoint(3, 4), new GpxTrackPoint(3.4844, 4.9545) });
 		underTest.saveRoute("testRoute", points);
-		ArgumentCaptor<Route> routeCapture = ArgumentCaptor.forClass(Route.class);
+		Route routeArgument = getRouteArgument();
+		assertRoute(routeArgument, "testRoute", points.get(0), points.get(1));
+		List<RoutePoint> routePoints = getRoutePointListArgument();
+		assertTakeOver(points, routePoints);
+	}
 
-		verify(routeRepository, times(1)).save(routeCapture.capture());
-		Route routeArgument = routeCapture.getValue();
-		assertThat(routeArgument.getName(), is("testRoute"));
-		assertThat(routeArgument.getStartLatitude(), is(points.get(0).getX()));
-		assertThat(routeArgument.getStartLongitude(), is(points.get(0).getY()));
-		assertThat(routeArgument.getEndLatitude(), is(points.get(points.size() - 1).getX()));
-		assertThat(routeArgument.getEndLongitude(), is(points.get(points.size() - 1).getY()));
+	@Test
+	public void saveRouteSkipMiddle() {
+		List<GpxTrackPoint> points = Arrays.asList(new GpxTrackPoint[] { //
+		        new GpxTrackPoint(3, 4), new GpxTrackPoint(3 + latitudeMeter, 4 + longitudeMeter), new GpxTrackPoint(3.4844, 4.9545) //
+		        });
 
+		underTest.saveRoute("testRoute", points);
+		Route routeArgument = getRouteArgument();
+		assertRoute(routeArgument, "testRoute", points.get(0), points.get(2));
+		List<RoutePoint> routePoints = getRoutePointListArgument();
+		assertTakeOver(points, routePoints, 0, 2); // 1 is skipped
+	}
+
+	@Test
+	public void saveRouteSkipMoreMiddle() {
+		List<GpxTrackPoint> points = Arrays.asList(new GpxTrackPoint[] { //
+		        new GpxTrackPoint(3, 4), // 0
+		                new GpxTrackPoint(3 + latitudeMeter, 4 + longitudeMeter),// 1
+		                new GpxTrackPoint(3 + 2 * latitudeMeter, 4 + 3 * longitudeMeter),// 2
+		                new GpxTrackPoint(3 + 10 * latitudeMeter, 4 + 10 * longitudeMeter),// 3
+		                new GpxTrackPoint(3 + 21 * latitudeMeter, 4 + 21 * longitudeMeter),// 4
+		                new GpxTrackPoint(3 + 70 * latitudeMeter, 4 + 70 * longitudeMeter) // 5
+		        });
+
+		underTest.saveRoute("testRoute", points);
+		Route routeArgument = getRouteArgument();
+		List<RoutePoint> routePoints = getRoutePointListArgument();
+
+		assertRoute(routeArgument, "testRoute", points.get(0), points.get(5));
+		assertTakeOver(points, routePoints, 0, 4, 5); // 1,2,3 is
+		                                              // skipped
+	}
+
+	@Test
+	public void saveRouteSkipSomeMiddleAndEnd() {
+		List<GpxTrackPoint> points = Arrays.asList(new GpxTrackPoint[] { //
+		        new GpxTrackPoint(3, 4), // 0
+		                new GpxTrackPoint(3 + latitudeMeter, 4 + longitudeMeter),// 1
+		                new GpxTrackPoint(3 + 40 * latitudeMeter, 4 + 3 * longitudeMeter),// 2
+		                new GpxTrackPoint(3 + 41 * latitudeMeter, 4 + 3 * longitudeMeter),// 3
+		                new GpxTrackPoint(3 + 60 * latitudeMeter, 4 + 20 * longitudeMeter),// 4
+		                new GpxTrackPoint(3 + 70 * latitudeMeter, 4 + 30 * longitudeMeter) // 5
+		        });
+
+		underTest.saveRoute("testRoute", points);
+		Route routeArgument = getRouteArgument();
+		assertRoute(routeArgument, "testRoute", points.get(0), points.get(4));
+		List<RoutePoint> routePoints = getRoutePointListArgument();
+		assertTakeOver(points, routePoints, 0, 2, 4); // 1,3,5 is skipped
+	}
+
+	private void assertRoute(Route routeArgument, String name, GpxTrackPoint startPoint, GpxTrackPoint endPoint) {
+		assertThat(routeArgument.getName(), is(name));
+		assertThat(routeArgument.getStartLatitude(), is(startPoint.getLatitude()));
+		assertThat(routeArgument.getStartLongitude(), is(startPoint.getLongitude()));
+		assertThat(routeArgument.getEndLatitude(), is(endPoint.getLatitude()));
+		assertThat(routeArgument.getEndLongitude(), is(endPoint.getLongitude()));
+	}
+
+	private void assertTakeOver(List<GpxTrackPoint> points, List<RoutePoint> routePoints, int... indices) {
+		for (int i = 0; i < routePoints.size(); i++) {
+			int gpxPointIndex = ArrayUtils.isEmpty(indices) ? i : indices[i];
+			RoutePoint routePoint = routePoints.get(i);
+			GpxTrackPoint gpxTrackPoint = points.get(gpxPointIndex);
+			assertThat(routePoint.getX(), is(gpxTrackPoint.getX()));
+			assertThat(routePoint.getY(), is(gpxTrackPoint.getY()));
+		}
+	}
+
+	private List<RoutePoint> getRoutePointListArgument() {
 		ArgumentCaptor<Iterable> routePointsCapture = ArgumentCaptor.forClass(Iterable.class);
 		verify(routePointRepository, times(1)).save(routePointsCapture.capture());
-		Iterator iterator = routePointsCapture.getValue().iterator();
-		RoutePoint rp = ((RoutePoint) iterator.next());
-		assertThat(rp.getX(), is(points.get(0).getX()));
-		assertThat(rp.getY(), is(points.get(0).getY()));
+		List<RoutePoint> routePoints = (List<RoutePoint>) routePointsCapture.getValue();
+		return routePoints;
+	}
 
-		rp = ((RoutePoint) iterator.next());
-		assertThat(rp.getX(), is(points.get(points.size() - 1).getX()));
-		assertThat(rp.getY(), is(points.get(points.size() - 1).getY()));
-
+	private Route getRouteArgument() {
+		ArgumentCaptor<Route> routeCapture = ArgumentCaptor.forClass(Route.class);
+		verify(routeRepository, times(1)).save(routeCapture.capture());
+		Route routeArgument = routeCapture.getValue();
+		return routeArgument;
 	}
 
 	@Test

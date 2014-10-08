@@ -23,18 +23,20 @@
 
 			<h3>Activities</h3>
 			<table>
-				<tr>
-					<th>Id</th>
-					<th>Name</th>
-					<th>Start</th>
-					<th>Route</th>
-					
-				</tr>
+				
 				<tr th:each="activity : ${activities}">
-					<td th:text="${activity.id}">122</td>
-					<td> <a th:text="${activity.name}" th:href="@{/activities/edit(id=${activity.id})}" href="#" >Kaltenbronn </a></td>
-					<td th:text="${activity.startDay}">3 days ago</td>
-					<td ><a th:text="${activity.route.name}" th:href="@{/routes/edit(id=${activity.route.id})}" href="#">Kaltenbronn </a></td>
+					<td> 
+					<div><a th:text="${activity.name}+' '+${activity.route.name} " th:href="@{/activities/edit(id=${activity.id})}" href="#" > 21.04.2014 Kaltenbronn </a></div>
+					<div th:text="'Distance: '+ ${#numbers.formatDecimal(activity.route.distance/1000,0,2,'COMMA')}+' km   Elevation: '+${activity.route.elevation}+' m '">Distance: 30 km   Elevation: 200 m</div>
+					</td>
+<!-- 					<td th:text="${activity.user}">Alitari</td> -->
+                    <td >
+                      <div><a href='#'>Alitari</a></div>
+                      <div th:text="'Time: '+ ${activity.timeFormatted}">Time: 21:02 </div>
+                    </td> 
+                    <td >
+                      <div th:text="${activity.startDay} ">20 DAYS AGO</div>
+                    </td>
                 </tr>
 			</table>
 

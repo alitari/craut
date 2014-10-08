@@ -9,7 +9,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
 import de.craut.domain.FileUpload;
@@ -21,6 +20,7 @@ import de.craut.domain.RoutePoint;
 import de.craut.domain.RoutePointRepository;
 import de.craut.domain.RouteRepository;
 import de.craut.util.geocalc.EarthCalc;
+import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
 @Service
 public class RouteService {
@@ -55,18 +55,27 @@ public class RouteService {
 		return list;
 	}
 
-	public Route saveRoute(String name, List<? extends Point> points) {
+	public Route saveRoute(String name, List<? extends GpxTrackPoint> points) {
 
 		List<RoutePoint> routePoints = new ArrayList<RoutePoint>();
-		Route route = new Route(name, new Date());
-		int seq = 0;
-		double distance = 0;
-		for (Point point : points) {
-			distance += routePoints.size() == 0 ? 0 : EarthCalc.getDistance(point, routePoints.get(routePoints.size() - 1));
-			routePoints.add(new RoutePoint(route, seq, point.getX(), point.getY()));
-			seq++;
-		}
+		Route route = new Route(name);
 
+		double distanceAggregated = 0;
+		int elevation = 0;
+		RoutePoint routePoint = null;
+		for (GpxTrackPoint point : points) {
+			int eleDiff = routePoint == null ? 0 : point.elevation - routePoint.getElevation();
+			double distance = routePoint == null ? 0 : EarthCalc.getDistance(point, routePoint);
+			logger.debug("point:" + point + " distance:" + distance + " distanceAgg:" + distanceAggregated);
+
+			if (routePoint == null || distance > 20d) {
+				elevation += eleDiff > 0 ? eleDiff : 0;
+				distanceAggregated += distance;
+				routePoint = new RoutePoint(routePoints.size(), point.getX(), point.getY(), point.elevation);
+				routePoints.add(routePoint);
+			}
+
+		}
 		RoutePoint firstPoint = routePoints.get(0);
 		RoutePoint lastPoint = routePoints.get(routePoints.size() - 1);
 
@@ -75,11 +84,17 @@ public class RouteService {
 
 		route.setEndLatitude(lastPoint.getLatitude());
 		route.setEndLongitude(lastPoint.getLongitude());
-		route.setDistance(distance);
+		route.setDistance(distanceAggregated);
+		route.setElevation(elevation);
 
-		Route savedRoute = routeRepository.save(route);
+		routeRepository.save(route);
+
+		for (RoutePoint rp : routePoints) {
+			rp.setRoute(route.getId());
+		}
+
 		routePointRepository.save(routePoints);
-		return savedRoute;
+		return route;
 	}
 
 	public void updateRoute(Route route) {
@@ -87,7 +102,7 @@ public class RouteService {
 	}
 
 	public List<RoutePoint> fetchRoutePoints(Route route) {
-		return routePointRepository.findByRoute(route);
+		return routePointRepository.findByRouteId(route.getId());
 	}
 
 	public FileUpload fileUpload(byte[] content, Type type, Format format) {

@@ -52,9 +52,9 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 
 	private List<GpxTrackPoint> createTrackPoints() {
 		List<GpxTrackPoint> trackPoints = Arrays.asList(new GpxTrackPoint[] {
-		        new GpxTrackPoint(startLatitude + latitudeMeter, startLongitude + longitudeMeter, createToday(1), 0),
-		        new GpxTrackPoint(startLatitude + 30 * latitudeMeter, startLongitude + 20 * longitudeMeter, createToday(8), 0),
-		        new GpxTrackPoint(endLatitude - 2 * latitudeMeter, endLongitude - 2 * longitudeMeter, createToday(30 * 60), 0) });
+		        new GpxTrackPoint(startLatitude + latitudeMeter, startLongitude + longitudeMeter, createToday(1), 0, 0, 0, 0, 0),
+		        new GpxTrackPoint(startLatitude + 30 * latitudeMeter, startLongitude + 20 * longitudeMeter, createToday(8), 0, 0, 0, 0, 0),
+		        new GpxTrackPoint(endLatitude - 2 * latitudeMeter, endLongitude - 2 * longitudeMeter, createToday(30 * 60), 0, 0, 0, 0, 0) });
 		return trackPoints;
 	}
 
@@ -66,7 +66,7 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 		List<GpxTrackPoint> trackPoints = createTrackPoints();
 
 		Map<Activity, List<ActivityPoint>> activities = underTest.createActivities(trackPoints);
-		List<RoutePoint> routePoints = routePointRepository.findByRoute(route);
+		List<RoutePoint> routePoints = routePointRepository.findByRouteId(route.getId());
 
 		assertThat(activities.size(), is(1));
 		Entry<Activity, List<ActivityPoint>> activityEntry = activities.entrySet().iterator().next();
@@ -81,9 +81,8 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 	}
 
 	private void checkActivityPoint(ActivityPoint activityPoint, RoutePoint routePoint, int seq, GpxTrackPoint trkPoint) {
-		assertThat(activityPoint.getActivity().getRoute(), is(routePoint.getRoute()));
 		assertThat(activityPoint.getRoutePoint(), is(routePoint));
-		assertThat(activityPoint.getTime(), is(trkPoint.time));
+		assertThat(activityPoint.getTime(), is(trkPoint.time.getTime()));
 	}
 
 	private Date createToday(int s) {

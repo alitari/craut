@@ -1,6 +1,6 @@
 function initialize() {
   var mapOptions = {
-    zoom: 10,
+    zoom: 12,
     center: flightPlanCoordinates[0],
     
   };

@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ActivityPointRepository extends CrudRepository<ActivityPoint, Long> {
 
-	List<ActivityPoint> findByActivity(Activity route);
+	List<ActivityPoint> findByActivityId(long actvityId);
 
 }

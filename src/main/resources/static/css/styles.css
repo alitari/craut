@@ -46,8 +46,8 @@ blockquote p {
 	height: 1%;
 }
 p {
-	line-height:1.9em;
-	margin-bottom:20px;
+/* 	line-height:1.9em; */
+	margin-bottom:10px;
 }
 a {
 	color:#0D3C84;
@@ -97,15 +97,18 @@ fieldset form {
 	padding-bottom:15px;
 }
 fieldset p label {
-	float:left;
+	font-weight:bold;
+	font-size:13px;
+	padding-right:10px;
+	color:#222;
 	width:150px;
-	font-family:Oxygen, Arial, Helvetica, sans-serif;
 }
-fieldset form input, fieldset form select, fieldset form textarea {
+
+fieldset input, fieldset select, fieldset textarea {
 	padding:5px;
 	color:#333333;
 	font-size:13px;
-	font-family:Oxygen, Arial, Helvetica, sans-serif;
+	/*font-family:Oxygen, Arial, Helvetica, sans-serif; */
 	border:1px solid #ddd;
 }
 input.formbutton {
@@ -305,7 +308,6 @@ aside#sidebar li ul li a:hover {
 	text-decoration:underline;
 }
 
-
 aside#sidebar li ul.blocklist li {
 	padding:0;
 }
@@ -335,6 +337,10 @@ aside#sidebar h4 {
 	font-weight:bold;
 	margin:0;
 	padding:7px 10px;
+}
+
+table#routes tr:hover {
+	background:#f0f0f0;
 }
 
 
