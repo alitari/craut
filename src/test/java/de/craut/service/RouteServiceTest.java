@@ -3,6 +3,7 @@ package de.craut.service;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,6 +42,9 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 		Route deletedRoute = underTest.deleteRoute(ID1);
 		assertThat(deletedRoute, is(allRoutes.get(0)));
 		verify(routeRepository, times(1)).delete(ID1);
+
+		List<RoutePoint> allRoutePoints = routePointRepository.findByRouteIdOrderBySequenceAsc(ID1);
+		verify(routePointRepository, times(1)).delete(eq(allRoutePoints));
 	}
 
 	@Test
@@ -70,7 +74,7 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 	public void getRoutePoints() {
 		setupRoute(ID1, NAME1);
 		underTest.fetchRoutePoints(allRoutes.get(0));
-		verify(routePointRepository, times(1)).findByRouteId(allRoutes.get(0).getId());
+		verify(routePointRepository, times(1)).findByRouteIdOrderBySequenceAsc(allRoutes.get(0).getId());
 	}
 
 	@Test

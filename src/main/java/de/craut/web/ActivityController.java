@@ -35,6 +35,13 @@ public class ActivityController extends AbstractController {
 		return "activities";
 	}
 
+	@RequestMapping("/delete")
+	public String delete(@RequestParam(value = "id", required = true) Long id, Model model) {
+		activityService.deleteAvtivity(id);
+		fillActivitiesContent(model);
+		return "activities";
+	}
+
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
 	public @ResponseBody String upload() {
 		return "You can upload a file by posting to this same URL.";

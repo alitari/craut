@@ -28,6 +28,8 @@ import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 @Service
 public class RouteService {
 
+	public static final double ROUTEPOINT_GRANULARITY = 40d;
+
 	private final RouteRepository routeRepository;
 	private final RoutePointRepository routePointRepository;
 	private final FileUploadRepository fileUploadRepository;
@@ -47,9 +49,11 @@ public class RouteService {
 	}
 
 	public Route deleteRoute(Long routeId) {
-		Route event = fetchRoute(routeId);
+		Route route = fetchRoute(routeId);
+		List<RoutePoint> routePoints = fetchRoutePoints(route);
+		routePointRepository.delete(routePoints);
 		routeRepository.delete(routeId);
-		return event;
+		return route;
 	}
 
 	public List<Route> fetchAllRoutes() {
@@ -76,7 +80,7 @@ public class RouteService {
 			double distance = routePoint == null ? 0 : EarthCalc.getDistance(point, routePoint);
 			logger.debug("point:" + point + " distance:" + distance + " distanceAgg:" + distanceAggregated);
 
-			if (routePoint == null || distance > 20d) {
+			if (routePoint == null || distance > ROUTEPOINT_GRANULARITY) {
 				elevation += eleDiff > 0 ? eleDiff : 0;
 				distanceAggregated += distance;
 				routePoint = new RoutePoint(routePoints.size(), point.getX(), point.getY(), point.elevation);

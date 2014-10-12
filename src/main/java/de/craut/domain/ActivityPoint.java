@@ -10,18 +10,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
-@JsonAutoDetect
+@SequenceGenerator(name = "pk_sequence", sequenceName = "activity_point_seq", allocationSize = 1)
 @Entity
 @Table(name = "activity_point")
 public class ActivityPoint implements Serializable {
 
 	@Id()
 	@Column(name = "ap_id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "pk_sequence")
 	private long id;
 
 	@Column(name = "ap_ra_id")

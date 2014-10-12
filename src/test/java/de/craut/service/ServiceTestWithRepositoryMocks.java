@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Before;
 
+import de.craut.domain.Activity;
 import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
 import de.craut.domain.FileUploadRepository;
@@ -23,6 +24,7 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 	protected T underTest;
 
 	protected List<Route> allRoutes;
+	protected List<Activity> allActivities;
 
 	protected ActivityRepository activityRepository;
 	protected RouteRepository routeRepository;
@@ -43,6 +45,8 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 		activityPointRepository = mock(ActivityPointRepository.class);
 
 		allRoutes = new ArrayList<Route>();
+		allActivities = new ArrayList<Activity>();
+
 		when(
 		        routeRepository.findByStartLatitudeLessThanAndStartLongitudeLessThanAndStartLatitudeGreaterThanAndStartLongitudeGreaterThan(anyDouble(),
 		                anyDouble(), anyDouble(), anyDouble())).thenReturn(allRoutes);
@@ -64,7 +68,7 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 			routePoints.add(routePoint);
 			i += 2;
 		}
-		when(routePointRepository.findByRouteId(anyLong())).thenReturn(routePoints);
+		when(routePointRepository.findByRouteIdOrderBySequenceAsc(anyLong())).thenReturn(routePoints);
 		return route;
 
 	}

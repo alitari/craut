@@ -10,19 +10,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.craut.util.AdvancedDateFormat;
 
+@SequenceGenerator(name = "pk_sequence", sequenceName = "activity_seq", allocationSize = 1)
 @Entity
 @Table(name = "activity")
 public class Activity implements Serializable {
 
 	@Id()
 	@Column(name = "ra_id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "pk_sequence")
 	private long id;
 
 	@ManyToOne(optional = false)

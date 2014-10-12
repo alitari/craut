@@ -55,10 +55,10 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 		assertMatch("08-05-2014", freiolsheim);
 		assertMatch("14-05-2014", roteLache);
 		assertMatch("16-05-2014", roteLache);
-		assertMatch("25-05-2014", freiolsheim);
+		assertMatch("25-05-2014", freiolsheim); // ok
 		assertMatch("28-05-2014", roteLache);
-		assertMatch("05-06-2014", freiolsheim);
-		assertMatch("07-06-2014", freiolsheim);
+		assertMatch("05-06-2014", freiolsheim); // ok
+		assertMatch("07-06-2014", freiolsheim);// ok
 
 	}
 

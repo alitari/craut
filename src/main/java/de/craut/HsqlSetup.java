@@ -19,6 +19,8 @@ import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
+import de.craut.domain.User;
+import de.craut.domain.UserRepository;
 import de.craut.service.RouteService;
 import de.craut.util.geocalc.GPXParser;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
@@ -31,16 +33,20 @@ public class HsqlSetup {
 
 		@Override
 		public void init(ApplicationContext ctx) {
-			RouteService routeService = ctx.getBean(RouteService.class);
 
-			Route savedRoute = saveRoute(ctx, "spessart.gpx");
+			UserRepository userRepo = ctx.getBean(UserRepository.class);
+
+			User user = new User("Alex", "mine");
+			userRepo.save(user);
+
+			Route savedRoute = saveRoute(ctx, "Baden-Baden-RoteLache.gpx");
 			createActivityFromRoute(ctx, savedRoute);
 
-			savedRoute = saveRoute(ctx, "Malsch-Freiolsheim.gpx");
-			createActivityFromRoute(ctx, savedRoute);
-
-			savedRoute = saveRoute(ctx, "RoteLache.gpx");
-			createActivityFromRoute(ctx, savedRoute);
+			// savedRoute = saveRoute(ctx, "Malsch-Freiolsheim.gpx");
+			// createActivityFromRoute(ctx, savedRoute);
+			//
+			// savedRoute = saveRoute(ctx, "RoteLache.gpx");
+			// createActivityFromRoute(ctx, savedRoute);
 
 		}
 

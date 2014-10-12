@@ -20,8 +20,11 @@ public class RouteServiceIntegrationTest extends AbstractServiceIntegrationTest 
 		fetchRoute = routeService.fetchRoute(freiolsheim.getId());
 		assertThat(fetchRoute.getName(), is("UpdatedName"));
 		assertThat(routeService.fetchAllRoutes().isEmpty(), is(false));
+		assertThat(routeService.fetchRoutePoints(fetchRoute).isEmpty(), is(false));
+
 		routeService.deleteRoute(fetchRoute.getId());
 		assertThat(routeService.fetchAllRoutes().isEmpty(), is(true));
+		assertThat(routeService.fetchRoutePoints(fetchRoute).isEmpty(), is(true));
 
 	}
 

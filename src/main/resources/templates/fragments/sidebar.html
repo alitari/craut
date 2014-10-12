@@ -22,7 +22,7 @@
 			<li>
 				<h4>Navigate</h4>
 				<ul class="blocklist">
-					<li th:each="nav : ${menuMain}" ><a th:text="${nav.text}" th:href="@{${nav.href}}">Dashboard</a></li>			
+					<li th:class="${nav.selected} ? 'selected-item':''"  th:each="nav : ${menuMain}" ><a th:text="${nav.text}" th:href="@{${nav.href}}">Dashboard</a></li>			
 				</ul>
 
 			</li>

@@ -121,18 +121,17 @@
 									<label for="powerDetails">Power Avg/Min/Max:</label><br/> <input th:value="${#numbers.formatDecimal(activity.powerAverage,0,0,'COMMA')}+' / '+${#numbers.formatDecimal(activity.powerMin,0,0,'COMMA')}+' / '+${#numbers.formatDecimal(activity.powerMax,0,0,'COMMA')}" readonly="readonly"
 										type="text" name="powerDetails" id="powerDetails" />
 								</p>
+								<p>
+								   <a id="delete" class="button" th:href="@{delete(id=${activity.id})}">Delete</a>
+							    </p>
 								</fieldset>
 								
 					</td>
 				</tr>
-				<tr>
-					<td >
-							<div id="map-canvas" style="height: 170px"></div>
-					</td>
-					<td >
+				<tr >
+					<td colspan="2" >
 							<div id="chart-canvas" style="height: 170px"></div>
 					</td>
-					
 				</tr>
 			</table>
 		</article>

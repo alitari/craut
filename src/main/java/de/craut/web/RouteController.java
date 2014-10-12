@@ -78,7 +78,7 @@ public class RouteController extends AbstractController {
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String upload(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, Model model) {
 		if (StringUtils.isEmpty(name)) {
-			name = file.getName() + "," + System.currentTimeMillis();
+			name = file.getOriginalFilename() + "," + System.currentTimeMillis();
 		}
 		List<GpxTrackPoint> trkPoints = parseGpxFile(file);
 

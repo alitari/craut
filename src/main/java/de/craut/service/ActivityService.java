@@ -65,7 +65,7 @@ public class ActivityService {
 		List<Route> routes = findRoutesCloseToPoint(gpxPoints);
 
 		for (Route route : routes) {
-			List<RoutePoint> routepoints = routePointRepository.findByRouteId(route.getId());
+			List<RoutePoint> routepoints = routePointRepository.findByRouteIdOrderBySequenceAsc(route.getId());
 			List<ActivityPoint> activityPoints = new ActivityMatchTreshHold20(gpxPoints, routepoints).start();
 			if (!activityPoints.isEmpty()) {
 				logger.info("TrackPoints matched to " + route + ", creating Activity...");
@@ -146,13 +146,17 @@ public class ActivityService {
 		double latitudeOffet = latitudeMeter * statistics.getRouteDistance();
 		double longitudeOffet = longitudeMeter * statistics.getRouteDistance();
 
-		double upperBoundLatitude = gpxPoints.get(0).getLatitude() + latitudeOffet;
-		double upperBoundLongitude = gpxPoints.get(0).getLongitude() + longitudeOffet;
+		double upperBoundLatitude = gpxPoints.get(gpxPoints.size() - 1).getLatitude() + latitudeOffet;
+		double upperBoundLongitude = gpxPoints.get(gpxPoints.size() - 1).getLongitude() + longitudeOffet;
 		double lowerBoundLatitude = gpxPoints.get(0).getLatitude() - latitudeOffet;
 		double lowerBoundLongitude = gpxPoints.get(0).getLongitude() - longitudeOffet;
 
-		List<Route> routes = routeRepository.findByStartLatitudeLessThanAndStartLongitudeLessThanAndStartLatitudeGreaterThanAndStartLongitudeGreaterThan(
-		        upperBoundLatitude, upperBoundLongitude, lowerBoundLatitude, lowerBoundLongitude);
+		// List<Route> routes =
+		// routeRepository.findByStartLatitudeLessThanAndStartLongitudeLessThanAndStartLatitudeGreaterThanAndStartLongitudeGreaterThan(
+		// upperBoundLatitude, upperBoundLongitude, lowerBoundLatitude,
+		// lowerBoundLongitude);
+
+		List<Route> routes = routeRepository.findAll();
 
 		logger.info("create Activities for gpxTrackPoints. " + "statistics=" + statistics + ",  checking " + routes.size() + " routes, for matching... ");
 		return routes;
@@ -194,13 +198,19 @@ public class ActivityService {
 
 		@Override
 		protected boolean isMatch() {
-			return currentDistance < 20;
+			return currentDistance < RouteService.ROUTEPOINT_GRANULARITY / 2 - 1;
 		}
 
 	}
 
 	public Activity fetchActivity(Long id) {
 		return activityRepository.findOne(id);
+	}
+
+	public void deleteAvtivity(Long id) {
+		List<ActivityPoint> activityPoints = fetchActivityPoints(id);
+		activityPointRepository.delete(activityPoints);
+		activityRepository.delete(id);
 	}
 
 }
