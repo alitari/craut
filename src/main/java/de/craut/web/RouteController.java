@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,35 +24,39 @@ import de.craut.util.geocalc.GpxUtils;
 @EnableAutoConfiguration
 public class RouteController extends AbstractController {
 
-	@RequestMapping("/list")
-	public String list(Model model) {
-		fillPageContent(model);
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public String list(@RequestParam(value = "page", required = false) Integer pageNumber, Model model) {
+		fillPageContent(model, pageNumber == null || pageNumber < 0 ? 0 : pageNumber);
 		return "routes";
 	}
 
-	private void fillPageContent(Model model) {
+	private void fillPageContent(Model model, int pageNumber) {
 		fillPageContent(model, "routes");
 
-		List<Route> routes = routeService.fetchAllRoutes();
-		model.addAttribute("routes", routes);
+		Page<Route> routePage = routeService.fetchRoutes(pageNumber);
+		int current = routePage.getNumber();
+		int total = routePage.getTotalPages();
+		model.addAttribute("currentIndex", current);
+		model.addAttribute("totalIndex", total);
+		model.addAttribute("routes", routePage.getContent());
 	}
 
 	@RequestMapping("/delete")
 	public String delete(@RequestParam(value = "id", required = true) Long id, Model model) {
 		routeService.deleteRoute(id);
-		fillPageContent(model);
+		fillPageContent(model, 0);
 		return "routes";
 	}
 
 	@RequestMapping("/create")
 	public String create(Model model) {
-		fillPageContent(model);
+		fillPageContent(model, 0);
 		return "route";
 	}
 
 	@RequestMapping("/edit")
 	public String edit(@RequestParam(value = "id", required = true) Long id, Model model) {
-		fillPageContent(model);
+		fillPageContent(model, 0);
 		fillRoute(model, id);
 		return "route";
 	}
@@ -61,7 +66,7 @@ public class RouteController extends AbstractController {
 		Route route = routeService.fetchRoute(id);
 		route.setName(name);
 		routeService.updateRoute(route);
-		fillPageContent(model);
+		fillPageContent(model, 0);
 		return "routes";
 	}
 
@@ -73,7 +78,7 @@ public class RouteController extends AbstractController {
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String upload(@RequestParam("file") MultipartFile file, @RequestParam("name") String name, Model model) {
 		if (StringUtils.isEmpty(name)) {
-			name = "No Name " + System.currentTimeMillis();
+			name = file.getName() + "," + System.currentTimeMillis();
 		}
 		List<GpxTrackPoint> trkPoints = parseGpxFile(file);
 
@@ -82,7 +87,7 @@ public class RouteController extends AbstractController {
 			model.addAttribute("uploadMessage", "Route data not correct.");
 		}
 
-		fillPageContent(model);
+		fillPageContent(model, 0);
 		return "routes";
 	}
 

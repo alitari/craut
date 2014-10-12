@@ -2,9 +2,9 @@ package de.craut.domain;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RouteRepository extends CrudRepository<Route, Long> {
+public interface RouteRepository extends JpaRepository<Route, Long> {
 
 	List<Route> findByName(String name);
 

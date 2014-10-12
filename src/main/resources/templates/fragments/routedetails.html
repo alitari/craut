@@ -81,6 +81,7 @@
 								</p>
 								<p>
 									<input type="submit" name="send" class="formbutton" value="Update" />
+									<a id ="delete" class="button" th:href="@{delete(id=${route.id})}">Delete</a>
 								</p>
 								<p>
 									<label for="distance">Distance:</label><br/> <input th:value="${#numbers.formatDecimal(route.distance/1000,0,2,'COMMA')}+' km'" readonly="readonly" name="distance" id="distance" />

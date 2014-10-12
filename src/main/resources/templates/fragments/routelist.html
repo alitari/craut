@@ -32,7 +32,6 @@
         /*]]>*/
 		</script>
 	
-
 		<article>
 
 			<h3>Routes</h3>
@@ -47,18 +46,24 @@
 					<td>
 					  <div>Leader: <a >: Alitari</a></div>
 <!-- 					  <a th:text="${routeLeader.name}" th:href="@{/users/edit(id=${routeLeader.id})}">Leader: Alitari</a> -->
-					  <div>Activities: 13 since 2 Weeks</div> 
+					  <div>2nd: Claus &nbsp;&nbsp; 3rd: Michael</div> 
 <!-- 					  <div th:text="'Activities: '+ ${activityInfo.count}+' since  '+${route.insertDate}+' m '">Activities: 13 since 2 Weeks</div> -->
 					</td>
 					<td>
-					  
+					    <div> Difficulty:&nbsp;&nbsp;<a href="#"><span id="star" class="fa fa-star"></span></a></div>
+					    <div> Popularity:&nbsp;&nbsp;<span class="fa fa-bicycle"></span><span class="fa fa-bicycle"></span></div>
 					</td>
                 </tr>
 			</table>
-
 			
-
+			<div align="center" > 
+				<a th:if="${currentIndex} &gt; 0" th:href="@{list(page=${currentIndex}-1)}" href="#" class="button button-reversed">Previous</a>
+				<label th:text="'  Page '+(${currentIndex}+1)+' of '+${totalIndex} "> Page 4 of 10</label> 
+				<a th:if="${currentIndex} &lt; ${totalIndex-1}" th:href="@{list(page=${currentIndex}+1)}" class="button button-reversed">Next</a>
+			</div>
 		</article>
+
+
 		<article>
 			<fieldset>
 				<legend>Map</legend>

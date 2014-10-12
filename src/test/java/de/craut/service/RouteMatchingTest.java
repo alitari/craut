@@ -70,11 +70,4 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 		assertThat("No match for activity " + activity, activityIter.hasNext(), is(true));
 		assertThat(activityIter.next().getRoute().getId(), is(route.getId()));
 	}
-
-	private Route saveRoute(String route) {
-		String routePath = "/gpx/routes/" + route + ".gpx";
-		List<GpxTrackPoint> gpxPointsRoute = GpxUtils.gpxFromFile(routePath);
-		Route savedRoute = routeService.saveRoute(routePath, gpxPointsRoute);
-		return savedRoute;
-	}
 }

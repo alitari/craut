@@ -9,6 +9,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import de.craut.domain.FileUpload;
@@ -53,6 +56,11 @@ public class RouteService {
 		List<Route> list = new ArrayList<Route>();
 		CollectionUtils.addAll(list, routeRepository.findAll().iterator());
 		return list;
+	}
+
+	public Page<Route> fetchRoutes(Integer pageNumber) {
+		PageRequest pageRequest = new PageRequest(pageNumber, 10, Sort.Direction.DESC, "id");
+		return routeRepository.findAll(pageRequest);
 	}
 
 	public Route saveRoute(String name, List<? extends GpxTrackPoint> points) {
@@ -102,7 +110,7 @@ public class RouteService {
 	}
 
 	public List<RoutePoint> fetchRoutePoints(Route route) {
-		return routePointRepository.findByRouteId(route.getId());
+		return routePointRepository.findByRouteIdOrderBySequenceAsc(route.getId());
 	}
 
 	public FileUpload fileUpload(byte[] content, Type type, Format format) {

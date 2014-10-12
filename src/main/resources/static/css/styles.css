@@ -69,6 +69,10 @@ a.button {
     text-transform: uppercase;
 }
 
+a.button#delete { 
+    background-color: #ff3737;
+}
+
 a.button:hover {
 	background-color: #092758;
 }
@@ -78,9 +82,12 @@ a.button-reversed {
     color: #0B3170;
 }
 
+
 a.button-reversed:hover {
 	background-color: #D7E5F4;
 }
+
+
 fieldset {
 	display:block;
 	border:none;
@@ -104,10 +111,16 @@ fieldset p label {
 	width:150px;
 }
 
+div.pagination {
+	align:center;
+}
+
+
+
 fieldset input, fieldset select, fieldset textarea {
 	padding:5px;
 	color:#333333;
-	font-size:13px;
+/* 	font-size:13px; */
 	/*font-family:Oxygen, Arial, Helvetica, sans-serif; */
 	border:1px solid #ddd;
 }
@@ -115,11 +128,19 @@ input.formbutton {
 	background:#0B3170;
 	border-radius: 5px 5px 5px 5px;
 /* 	border-bottom:3px solid #082659; */
+    font-family:  Anaheim;
 	color:#ffffff;
 	font-weight:bold;
 	padding: 8px 15px;
 	text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
 }
+
+span#star {
+	color:#dad010;
+}
+
 
 
 h1 {
