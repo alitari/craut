@@ -28,6 +28,7 @@ import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
 import de.craut.domain.RoutePointRepository;
 import de.craut.domain.RouteRepository;
+import de.craut.domain.User;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
 public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<ActivityService> {
@@ -36,6 +37,7 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 	private double startLongitude;
 	private double endLatitude;
 	private double endLongitude;
+	private User user;
 
 	@Override
 	@Before
@@ -46,12 +48,13 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 		startLongitude = 8.202952;
 		endLatitude = 48.800747;
 		endLongitude = 8.212094;
+		user = new User("testUser", "password");
 
 	}
 
 	@Test
 	public void delete() {
-		setupActivity(7L, "Activity Wurst");
+		setupActivity(7L, "Activity Wurst", user);
 		List<ActivityPoint> allActivityPoints = activityPointRepository.findByActivityId(7L);
 		underTest.deleteAvtivity(7L);
 		verify(activityRepository, times(1)).delete(7L);
@@ -60,7 +63,7 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 
 	@Test
 	public void fetchActivity() {
-		setupActivity(7L, "Activity Wurst");
+		setupActivity(7L, "Activity Wurst", user);
 		Activity activity = underTest.fetchActivity(7L);
 		assertThat(activity, is(allActivities.get(0)));
 		verify(activityRepository, times(1)).findOne(7L);
@@ -109,12 +112,13 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 
 		List<GpxTrackPoint> trackPoints = createTrackPoints();
 
-		Map<Activity, List<ActivityPoint>> activities = underTest.createActivities(trackPoints);
+		Map<Activity, List<ActivityPoint>> activities = underTest.createActivities(user, trackPoints);
 		List<RoutePoint> routePoints = routePointRepository.findByRouteIdOrderBySequenceAsc(route.getId());
 
 		assertThat(activities.size(), is(1));
 		Entry<Activity, List<ActivityPoint>> activityEntry = activities.entrySet().iterator().next();
 		Activity activity = activityEntry.getKey();
+		assertThat(activity.getUser(), is(user));
 		assertThat(activity.getRoute(), is(route));
 		List<ActivityPoint> pointList = activityEntry.getValue();
 		assertThat(pointList.size(), is(routePoints.size()));
@@ -124,9 +128,9 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 
 	}
 
-	protected Activity setupActivity(long id, String name) {
+	protected Activity setupActivity(long id, String name, User user) {
 		Route route = setupRoute(14L, "route1", 1d, 2d, 3d, 4d);
-		Activity activty = new Activity(name, route, System.currentTimeMillis() - 60000, System.currentTimeMillis());
+		Activity activty = new Activity(name, user, route, System.currentTimeMillis() - 60000, System.currentTimeMillis());
 
 		allActivities.add(activty);
 		when(activityRepository.findOne(id)).thenReturn(activty);

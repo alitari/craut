@@ -74,32 +74,35 @@
 					<td valign="top">
 						<fieldset>
 
-							<legend>Basic</legend>
+							
 							<form action="edited" method="get">
 								<p>
 									<label for="name">Name:</label><br/> <input th:value="${route.name}" type="text" name="name" id="name" />
-								</p>
-								<p>
 									<input type="submit" name="send" class="formbutton" value="Update" />
-									<a id ="delete" class="button" th:href="@{delete(id=${route.id})}">Delete</a>
 								</p>
+							</form>
 								<p>
 									<label for="distance">Distance:</label><br/> <input th:value="${#numbers.formatDecimal(route.distance/1000,0,2,'COMMA')}+' km'" readonly="readonly" name="distance" id="distance" />
 								</p>
 								<p>
 									<label for="elevation">Elevation:</label><br/> <input th:value="${#numbers.formatInteger(route.elevation,0)}+' m'" readonly="readonly"  name="distance" id="distance" />
 								</p>
-								
+								<p>
+									<label for="elevation">Ascent:</label><br/> <input th:value="${#numbers.formatDecimal(route.ascent,0,2)}+' %'" readonly="readonly"  name="distance" id="distance" />
+								</p>
+								<p>
+									<label for="elevation">Difficulty:</label><br/> <input th:value="${#numbers.formatDecimal(route.difficulty,0,2)}+' points'" readonly="readonly"  name="distance" id="distance" />
+								</p>
 								<input type="hidden" name="id" th:value="${route.id}" />
-							</form>
+							
 
 						</fieldset>
 					</td>
 					<td valign="top">
 						<fieldset>
 
-							<legend>Details</legend>
-							<form action="#" method="get">
+							
+							
 								<p>
 									<label for="points">Points count:</label> <br/><input th:value="${#lists.size(routePoints) }" disabled="disabled"
 										type="text" name="points" id="points" />
@@ -113,7 +116,9 @@
 									<label for="mindistance">Min Point Distance(m):</label> <br/><input th:value="${#numbers.formatDecimal(gpxStatistics.minDistance,3,2,'COMMA')}" disabled="disabled"
 										type="text" name="mindistance" id="mindistance" />
 								</p>
-							</form>
+							<p>
+								<a id="delete" class="button" th:href="@{delete(id=${route.id})}">Delete</a>
+							</p>
 
 						</fieldset>
 					</td>

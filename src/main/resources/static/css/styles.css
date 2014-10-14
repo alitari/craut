@@ -286,6 +286,14 @@ section#body {
 	background:#fff;
 }
 
+/** body **/
+section#login {
+	padding:10px 0;
+	background:#fff;
+	border: 2px;
+}
+
+
 
 /** content+sidebar styles **/
 section#content {

@@ -107,8 +107,8 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 		                new GpxTrackPoint(3 + latitudeMeter, 4 + longitudeMeter),// 1
 		                new GpxTrackPoint(3 + 2 * latitudeMeter, 4 + 3 * longitudeMeter),// 2
 		                new GpxTrackPoint(3 + 10 * latitudeMeter, 4 + 10 * longitudeMeter),// 3
-		                new GpxTrackPoint(3 + 21 * latitudeMeter, 4 + 21 * longitudeMeter),// 4
-		                new GpxTrackPoint(3 + 70 * latitudeMeter, 4 + 70 * longitudeMeter) // 5
+		                new GpxTrackPoint(3 + 41 * latitudeMeter, 4 + 41 * longitudeMeter),// 4
+		                new GpxTrackPoint(3 + 80 * latitudeMeter, 4 + 80 * longitudeMeter) // 5
 		        });
 
 		underTest.saveRoute("testRoute", points);
@@ -127,7 +127,7 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 		                new GpxTrackPoint(3 + latitudeMeter, 4 + longitudeMeter),// 1
 		                new GpxTrackPoint(3 + 40 * latitudeMeter, 4 + 3 * longitudeMeter),// 2
 		                new GpxTrackPoint(3 + 41 * latitudeMeter, 4 + 3 * longitudeMeter),// 3
-		                new GpxTrackPoint(3 + 60 * latitudeMeter, 4 + 20 * longitudeMeter),// 4
+		                new GpxTrackPoint(3 + 80 * latitudeMeter, 4 + 20 * longitudeMeter),// 4
 		                new GpxTrackPoint(3 + 70 * latitudeMeter, 4 + 30 * longitudeMeter) // 5
 		        });
 

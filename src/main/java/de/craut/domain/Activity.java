@@ -28,6 +28,10 @@ public class Activity implements Serializable {
 	private long id;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "ra_us_id", referencedColumnName = "us_id")
+	private User user;
+
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "ra_rt_id", referencedColumnName = "rt_id")
 	private Route route;
 
@@ -79,9 +83,10 @@ public class Activity implements Serializable {
 	protected Activity() {
 	}
 
-	public Activity(String name, Route route, long start, long end) {
+	public Activity(String name, User user, Route route, long start, long end) {
 		super();
 		this.name = name;
+		this.user = user;
 		this.route = route;
 		this.start = start;
 		this.end = end;
@@ -244,6 +249,14 @@ public class Activity implements Serializable {
 
 	public void setHeartRateMin(int heartRateMin) {
 		this.heartRateMin = heartRateMin;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

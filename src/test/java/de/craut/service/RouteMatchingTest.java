@@ -16,12 +16,14 @@ import de.craut.domain.Activity;
 import de.craut.domain.ActivityPoint;
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
+import de.craut.domain.User;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 import de.craut.util.geocalc.GpxUtils;
 
 public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 
 	private static final String TEST_ROUTE = "Test-Route";
+	private User user = new User("test", "password");
 
 	@Test
 	public void basic() throws Exception {
@@ -38,7 +40,8 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 
 		List<GpxTrackPoint> trkPoints = Arrays.asList(new GpxTrackPoint[] { new GpxTrackPoint(65.34, 23.4644, new Date(), 0, 0, 0, 0, 0),
 		        new GpxTrackPoint(65.35, 23.5644, new Date(), 0, 0, 0, 0, 0), new GpxTrackPoint(65.36, 23.6644, new Date(), 0, 0, 0, 0, 0) });
-		Map<Activity, List<ActivityPoint>> activities = activityService.createActivities(trkPoints);
+
+		Map<Activity, List<ActivityPoint>> activities = activityService.createActivities(user, trkPoints);
 		Activity activity = activities.keySet().iterator().next();
 		assertThat(activity.getRoute().getId(), is(route.getId()));
 
@@ -65,7 +68,7 @@ public class RouteMatchingTest extends AbstractServiceIntegrationTest {
 	private void assertMatch(String activity, Route route) {
 		String activityPath = "/gpx/activities/" + activity + ".gpx";
 		List<GpxTrackPoint> gpxPointsActivity = GpxUtils.gpxFromFile(activityPath);
-		Map<Activity, List<ActivityPoint>> activities = activityService.createActivities(gpxPointsActivity);
+		Map<Activity, List<ActivityPoint>> activities = activityService.createActivities(user, gpxPointsActivity);
 		Iterator<Activity> activityIter = activities.keySet().iterator();
 		assertThat("No match for activity " + activity, activityIter.hasNext(), is(true));
 		assertThat(activityIter.next().getRoute().getId(), is(route.getId()));

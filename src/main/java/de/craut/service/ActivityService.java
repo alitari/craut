@@ -21,6 +21,7 @@ import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
 import de.craut.domain.RoutePointRepository;
 import de.craut.domain.RouteRepository;
+import de.craut.domain.User;
 import de.craut.util.geocalc.EarthCalc;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 import de.craut.util.geocalc.GpxPointStatistics;
@@ -55,11 +56,15 @@ public class ActivityService {
 		return activities;
 	}
 
+	public List<Activity> fetchAllActivities(User user) {
+		return activityRepository.findByUser(user);
+	}
+
 	public List<ActivityPoint> fetchActivityPoints(long id) {
 		return activityPointRepository.findByActivityId(id);
 	}
 
-	public Map<Activity, List<ActivityPoint>> createActivities(List<GpxTrackPoint> gpxPoints) {
+	public Map<Activity, List<ActivityPoint>> createActivities(User user, List<GpxTrackPoint> gpxPoints) {
 		Map<Activity, List<ActivityPoint>> activityMap = new HashMap<Activity, List<ActivityPoint>>();
 
 		List<Route> routes = findRoutesCloseToPoint(gpxPoints);
@@ -70,7 +75,7 @@ public class ActivityService {
 			if (!activityPoints.isEmpty()) {
 				logger.info("TrackPoints matched to " + route + ", creating Activity...");
 
-				Activity activity = createActivityFromPoints(route, activityPoints);
+				Activity activity = createActivityFromPoints(user, route, activityPoints);
 
 				activityMap.put(activity, activityPoints);
 			}
@@ -79,13 +84,13 @@ public class ActivityService {
 		return activityMap;
 	}
 
-	Activity createActivityFromPoints(Route route, List<ActivityPoint> activityPoints) {
+	Activity createActivityFromPoints(User user, Route route, List<ActivityPoint> activityPoints) {
 		ActivityPoint firstPoint = activityPoints.get(0);
 		ActivityPoint lastPoint = activityPoints.get(activityPoints.size() - 1);
 		long start = firstPoint.getTime();
 		long end = lastPoint.getTime();
 
-		Activity activity = new Activity(String.valueOf(new Date(start)), route, start, end);
+		Activity activity = new Activity(String.valueOf(new Date(start)), user, route, start, end);
 
 		int hrMax = Integer.MIN_VALUE;
 		int hrMin = Integer.MAX_VALUE;

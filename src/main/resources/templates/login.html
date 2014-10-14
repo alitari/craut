@@ -37,21 +37,46 @@
 
 	<div th:replace="fragments/header :: header"></div>
 
-	<section id="body" class="width clear">
+	<section id="login" class="width clear">
 	
 	<h4>Login</h4>
-	<p th:if="${param.logout}" class="alert">You have been logged out</p>
-			<p th:if="${param.error}" class="alert alert-error">There was an error, please try again</p>
-			<h2>Login with Username and Password</h2>
-			<form name="form" th:action="@{/login}" action="/login" method="POST">
-				<fieldset>
-					<input type="text" name="username" value="" placeholder="Username" />
-					<input type="password" name="password" placeholder="Password" />
-				</fieldset>
-				<input type="submit" id="login" value="Login"
-					class="btn btn-primary" />
-			</form>
-
+	    <p th:if="${param.logout}" class="alert">You have been logged out</p>
+		<p th:if="${param.error}" class="alert alert-error">There was an error, please try again</p>
+		<p th:if="${message}" class="alert alert-error" th:text="${message}"></p>
+		<p th:if="${username}" class="info" th:text="'User \''+${username}+'\' created. Login with  password below and use browser password mangagement. '">Please login with the right values.</p>
+		
+		 <table>
+		    <tr>
+		    <td>
+			<fieldset>
+			<legend> Existing User</legend>
+      			<form name="form" th:action="@{/login}" action="/login" method="POST">
+      			    <p>
+					<label for="username">Username:</label><br/><input type="text" name="username" th:value="${username}" value="" placeholder="Username" />
+					</p>
+					<p>
+					<label for="password">Password:</label><br/><input type="password" name="password" placeholder="Password" />
+					</p>
+		    		<input type="submit" id="login" value="Login" 	class="formbutton" />
+			    </form>
+			</fieldset>
+			</td>
+			<td>
+			<fieldset  >
+			<legend>Create User</legend>
+      			<form name="form" th:action="@{/login/create}" action="/login/create" method="POST">
+      			    <p>
+					   <label for="username">Username:</label><br/><input type="text" th:value="${username}" name="username" value="" placeholder="Username" />
+					</p>
+					<p>
+					   <label for="password">Password:</label><br/><input type="text" th:value="${password}" name="password" placeholder="Password" readonly="readonly" />
+					</p>
+		    		<input  th:unless="${username}" type="submit" id="create" value="Create" class="formbutton" />
+			    </form>
+			</fieldset>
+			</td>
+			</tr>
+			</table>
 	</section>
 	
 	

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @SequenceGenerator(name = "pk_sequence", sequenceName = "route_seq", allocationSize = 1)
 @Entity
 @Table(name = "route")
@@ -107,6 +109,33 @@ public class Route implements Serializable {
 
 	public void setElevation(int elevation) {
 		this.elevation = elevation;
+	}
+
+	@JsonIgnore
+	public double getAscent() {
+		return (elevation / distance) * 100;
+	}
+
+	@JsonIgnore
+	public double getDifficulty() {
+		double ascent = getAscent();
+		return 0.1 * ascent * ascent * (distance / 1000);
+	}
+
+	@JsonIgnore
+	public int getDifficultyStars() {
+		double difficulty = getDifficulty();
+		if (difficulty < 10)
+			return 0;
+		if (difficulty < 20)
+			return 1;
+		if (difficulty < 40)
+			return 2;
+		if (difficulty < 80)
+			return 3;
+		if (difficulty < 120)
+			return 4;
+		return 5;
 	}
 
 	@Override

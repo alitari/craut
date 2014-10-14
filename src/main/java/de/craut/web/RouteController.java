@@ -31,7 +31,7 @@ public class RouteController extends AbstractController {
 	}
 
 	private void fillPageContent(Model model, int pageNumber) {
-		fillPageContent(model, "routes");
+		fillPageContent(model, "Routes");
 
 		Page<Route> routePage = routeService.fetchRoutes(pageNumber);
 		int current = routePage.getNumber();

@@ -18,10 +18,24 @@
 <body>
     
 	<section th:fragment="content" id="content" class="column-right">
+	
+	<script th:inline="javascript">
+         /*<![CDATA[*/
+         
+         var activities= /*[[${activities}]]*/;
+            var routeCoordinates = [[]];
+            for (var i = 0; i < activities.length; i++) { 
+              routeCoordinates[i] = [activities[i].route.name, activities[i].route.startLatitude, activities[i].route.startLongitude, i,activities[i].route.distance,activities[i].route.elevation,activities[i].route.id ] 
+            }
+         
+         google.maps.event.addDomListener(window, 'load', initialize);
+        	
+        /*]]>*/
+		</script>
 
 		<article>
 
-			<h3>Activities</h3>
+			<h3 th:text="' Activities' ">Activities</h3>
 			<table>
 				
 				<tr th:each="activity : ${activities}">
@@ -31,7 +45,7 @@
 					</td>
 <!-- 					<td th:text="${activity.user}">Alitari</td> -->
                     <td >
-                      <div><a href='#'>Alitari</a></div>
+                      <div><a th:href="@{/users/(id=${activity.user.id})}"   th:text="${activity.user.name}" href='#' >Alitari</a></div>
                       <div th:text="'Time: '+ ${activity.timeFormatted}">Time: 21:02 </div>
                     </td> 
                     <td >

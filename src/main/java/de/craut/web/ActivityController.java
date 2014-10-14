@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.craut.domain.Activity;
 import de.craut.domain.ActivityPoint;
+import de.craut.domain.User;
 import de.craut.service.ActivityService;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
 
@@ -30,15 +31,16 @@ public class ActivityController extends AbstractController {
 	private ActivityService activityService;
 
 	@RequestMapping("/list")
-	public String list(Model model) {
-		fillActivitiesContent(model);
+	public String list(@RequestParam(value = "forUser", required = false) boolean forUser, Model model) {
+
+		fillActivitiesContent(forUser ? user : null, model);
 		return "activities";
 	}
 
 	@RequestMapping("/delete")
 	public String delete(@RequestParam(value = "id", required = true) Long id, Model model) {
 		activityService.deleteAvtivity(id);
-		fillActivitiesContent(model);
+		fillActivitiesContent(user, model);
 		return "activities";
 	}
 
@@ -51,13 +53,13 @@ public class ActivityController extends AbstractController {
 	public String upload(@RequestParam("file") MultipartFile file, Model model) {
 		List<GpxTrackPoint> trkPoints = parseGpxFile(file);
 
-		Map<Activity, List<ActivityPoint>> activitiesMap = activityService.createActivities(trkPoints);
+		Map<Activity, List<ActivityPoint>> activitiesMap = activityService.createActivities(user, trkPoints);
 		if (!activitiesMap.isEmpty()) {
 			model.addAttribute("activityMap", activitiesMap);
 			return "activityselection";
 		} else {
 			model.addAttribute("uploadMessage", "No routes matches.");
-			fillActivitiesContent(model);
+			fillActivitiesContent(user, model);
 			return "activities";
 		}
 	}
@@ -76,19 +78,19 @@ public class ActivityController extends AbstractController {
 		activityService.saveActivities(activityMap);
 		activityMap.clear();
 
-		fillActivitiesContent(model);
+		fillActivitiesContent(user, model);
 		return "activities";
 	}
 
-	private void fillActivitiesContent(Model model) {
-		fillPageContent(model, "activities");
-		List<Activity> activities = activityService.fetchAllActivities();
+	private void fillActivitiesContent(User user, Model model) {
+		fillPageContent(model, "Activities");
+		List<Activity> activities = user == null ? activityService.fetchAllActivities() : activityService.fetchAllActivities(user);
 		model.addAttribute("activities", activities);
 	}
 
 	@RequestMapping("/edit")
 	public String edit(@RequestParam(value = "id", required = true) Long id, Model model) {
-		fillPageContent(model, "activities");
+		fillPageContent(model, "Activities");
 		fillActivity(model, id);
 		return "activity";
 	}
@@ -99,7 +101,6 @@ public class ActivityController extends AbstractController {
 		Activity activity = activityService.fetchActivity(id);
 		model.addAttribute("activityPoints", activityPoints);
 		model.addAttribute("activity", activity);
-
 	}
 
 }

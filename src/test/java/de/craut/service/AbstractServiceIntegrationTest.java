@@ -27,6 +27,9 @@ public abstract class AbstractServiceIntegrationTest {
 
 	@Before
 	public void setup() {
+		routeService.routeRepository.deleteAll();
+		routeService.routePointRepository.deleteAll();
+
 	}
 
 	protected Route saveRoute(String route) {

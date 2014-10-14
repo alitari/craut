@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,15 +75,15 @@ public class Application {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests().anyRequest().fullyAuthenticated().and().formLogin().loginPage("/login").failureUrl("/login?error").permitAll();
+			http.authorizeRequests().anyRequest().fullyAuthenticated().and().formLogin().loginPage("/login").failureUrl("/login?error").//
+			        and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").permitAll();
+			http.csrf().disable();
 		}
 
-		// @Override
-		// public void configure(AuthenticationManagerBuilder auth) throws
-		// Exception {
-		// auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN",
-		// "USER").and().withUser("user").password("user").roles("USER");
-		// }
+		@Override
+		public void configure(WebSecurity web) throws Exception {
+			web.ignoring().antMatchers("/login/create");
+		}
 
 	}
 

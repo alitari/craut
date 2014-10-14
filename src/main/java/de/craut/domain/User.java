@@ -10,9 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+
 @SequenceGenerator(name = "pk_sequence", sequenceName = "user_seq", allocationSize = 1)
 @Entity
 @Table(name = "user")
+@Component
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class User implements Serializable {
 
 	@Id()
@@ -20,7 +26,7 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "pk_sequence")
 	private long id;
 
-	@Column(name = "us_name", nullable = false)
+	@Column(name = "us_name", nullable = false, unique = true)
 	private String name;
 
 	@Column(name = "us_password", nullable = false)

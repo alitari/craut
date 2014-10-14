@@ -35,22 +35,28 @@
 		<article>
 			<h3>Routes</h3>
 			<table id="routes">
-				
+				<tr>
+				 <th> Name </th>
+				 <th> Distance </th>
+				 <th> Elevation </th>
+				 <th> Difficulty </th>
+				 
+				</tr>
 				<tr th:each="route : ${routes}">
 <!-- 					<td> <a th:text="${route.id}" th:href="@{/routes/edit(id=${route.id})}">122</a></td> -->
 					<td> 
 					  <div><a th:text="${route.name}" th:href="@{/routes/edit(id=${route.id})}">Kaltenbronn</a></div>
-					  <div th:text="'Distance: '+ ${#numbers.formatDecimal(route.distance/1000,0,2,'COMMA')}+' km   Elevation: '+${route.elevation}+' m '">Distance: 30 km   Elevation: 200 m</div>
 					</td>
 					<td>
-					  <div>Leader: <a >: Alitari</a></div>
-<!-- 					  <a th:text="${routeLeader.name}" th:href="@{/users/edit(id=${routeLeader.id})}">Leader: Alitari</a> -->
-					  <div>2nd: Claus &nbsp;&nbsp; 3rd: Michael</div> 
-<!-- 					  <div th:text="'Activities: '+ ${activityInfo.count}+' since  '+${route.insertDate}+' m '">Activities: 13 since 2 Weeks</div> -->
+					  <div th:text="${#numbers.formatDecimal(route.distance/1000,0,2,'COMMA')}">30 km</div>
 					</td>
 					<td>
-					    <div> Difficulty:&nbsp;&nbsp;<a href="#"><span id="star" class="fa fa-star"></span></a></div>
-					    <div> Popularity:&nbsp;&nbsp;<span class="fa fa-bicycle"></span><span class="fa fa-bicycle"></span></div>
+					  <div th:text="${route.elevation}+' m '">200 m</div>
+					</td>
+					<td>
+					    <div><a th:each="stars: ${#numbers.sequence(1,route.difficultyStars)}" href="#"><span id="star" class="fa fa-star"></span></a>
+					    <span th:text="'('+${#numbers.formatDecimal(route.difficulty,1,0)}+')'"></span>
+					    </div>
 					</td>
                 </tr>
 			</table>
@@ -63,13 +69,7 @@
 		</article>
 
 
-<!-- 		<article> -->
-<!-- 			<fieldset> -->
-<!-- 				<legend>Map</legend> -->
-<!-- 				<div id="map-canvas" style="height: 170px"></div> -->
-<!-- 			</fieldset> -->
 
-<!-- 		</article> -->
 
 	</section>
 

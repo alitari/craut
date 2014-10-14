@@ -40,7 +40,7 @@ public class HsqlSetup {
 			userRepo.save(user);
 
 			Route savedRoute = saveRoute(ctx, "Baden-Baden-RoteLache.gpx");
-			createActivityFromRoute(ctx, savedRoute);
+			createActivityFromRoute(ctx, savedRoute, user);
 
 			// savedRoute = saveRoute(ctx, "Malsch-Freiolsheim.gpx");
 			// createActivityFromRoute(ctx, savedRoute);
@@ -50,12 +50,12 @@ public class HsqlSetup {
 
 		}
 
-		private void createActivityFromRoute(ApplicationContext ctx, Route route) {
+		private void createActivityFromRoute(ApplicationContext ctx, Route route, User user) {
 			Date start = DateUtils.addMinutes(new Date(), -20);
 			Date end = new Date();
 
 			ActivityRepository activityRepository = ctx.getBean(ActivityRepository.class);
-			Activity activity = new Activity(DateFormatUtils.format(start, "dd.MM.yy"), route, start.getTime(), end.getTime());
+			Activity activity = new Activity(DateFormatUtils.format(start, "dd.MM.yy"), user, route, start.getTime(), end.getTime());
 			activity = activityRepository.save(activity);
 
 			List<RoutePoint> rpList = ctx.getBean(RouteService.class).fetchRoutePoints(route);

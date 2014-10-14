@@ -30,9 +30,9 @@ public class RouteService {
 
 	public static final double ROUTEPOINT_GRANULARITY = 40d;
 
-	private final RouteRepository routeRepository;
-	private final RoutePointRepository routePointRepository;
-	private final FileUploadRepository fileUploadRepository;
+	final RouteRepository routeRepository;
+	final RoutePointRepository routePointRepository;
+	final FileUploadRepository fileUploadRepository;
 
 	private final Logger logger = Logger.getLogger(getClass());
 

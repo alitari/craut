@@ -8,4 +8,6 @@ public interface ActivityRepository extends CrudRepository<Activity, Long> {
 
 	List<Activity> findByRoute(String name);
 
+	List<Activity> findByUser(User user);
+
 }
