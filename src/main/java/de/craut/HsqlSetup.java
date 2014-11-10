@@ -1,6 +1,9 @@
 package de.craut;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,20 +37,58 @@ public class HsqlSetup {
 		@Override
 		public void init(ApplicationContext ctx) {
 
+			List<User> users = createUsers(ctx, "Tick", "Trick", "Track");
+
+			List<Route> routes = createRoutes(ctx, "/gpx/routes");
+
+			createActivityFromRoute(ctx, routes.get(0), users.get(0));
+			createActivityFromRoute(ctx, routes.get(1), users.get(0));
+			createActivityFromRoute(ctx, routes.get(2), users.get(0));
+			createActivityFromRoute(ctx, routes.get(3), users.get(0));
+
+			createActivityFromRoute(ctx, routes.get(2), users.get(1));
+			createActivityFromRoute(ctx, routes.get(3), users.get(1));
+			createActivityFromRoute(ctx, routes.get(4), users.get(1));
+			createActivityFromRoute(ctx, routes.get(5), users.get(1));
+			createActivityFromRoute(ctx, routes.get(6), users.get(1));
+			createActivityFromRoute(ctx, routes.get(7), users.get(1));
+
+			createActivityFromRoute(ctx, routes.get(2), users.get(2));
+			createActivityFromRoute(ctx, routes.get(3), users.get(2));
+			createActivityFromRoute(ctx, routes.get(4), users.get(2));
+			createActivityFromRoute(ctx, routes.get(9), users.get(2));
+			createActivityFromRoute(ctx, routes.get(10), users.get(2));
+			createActivityFromRoute(ctx, routes.get(11), users.get(2));
+
+		}
+
+		private List<Route> createRoutes(ApplicationContext ctx, String path) {
+			ArrayList<Route> savedRoutes = new ArrayList<Route>();
+			URL dirURL = getClass().getResource(path);
+			String[] routeFiles = null;
+			try {
+				routeFiles = new File(dirURL.toURI()).list();
+				for (int i = 0; i < routeFiles.length; i++) {
+					Route saveRoute = saveRoute(ctx, path, routeFiles[i]);
+					savedRoutes.add(saveRoute);
+				}
+
+			} catch (URISyntaxException e) {
+				throw new RuntimeException(e);
+			}
+
+			return savedRoutes;
+		}
+
+		private List<User> createUsers(ApplicationContext ctx, String... users) {
+			ArrayList<User> list = new ArrayList<User>();
 			UserRepository userRepo = ctx.getBean(UserRepository.class);
-
-			User user = new User("Alex", "mine");
-			userRepo.save(user);
-
-			Route savedRoute = saveRoute(ctx, "Baden-Baden-RoteLache.gpx");
-			createActivityFromRoute(ctx, savedRoute, user);
-
-			// savedRoute = saveRoute(ctx, "Malsch-Freiolsheim.gpx");
-			// createActivityFromRoute(ctx, savedRoute);
-			//
-			// savedRoute = saveRoute(ctx, "RoteLache.gpx");
-			// createActivityFromRoute(ctx, savedRoute);
-
+			for (int i = 0; i < users.length; i++) {
+				User user = new User(users[i], users[i]);
+				userRepo.save(user);
+				list.add(user);
+			}
+			return list;
 		}
 
 		private void createActivityFromRoute(ApplicationContext ctx, Route route, User user) {
@@ -76,8 +117,8 @@ public class HsqlSetup {
 			activityPointRepo.save(apList);
 		}
 
-		private Route saveRoute(ApplicationContext ctx, String gpxFileName) {
-			InputStream gpxIs = getClass().getResourceAsStream("/gpx/routes/" + gpxFileName);
+		private Route saveRoute(ApplicationContext ctx, String path, String gpxFileName) {
+			InputStream gpxIs = getClass().getResourceAsStream(path + "/" + gpxFileName);
 			GPXParser gpxParser = new GPXParser();
 			List<GpxTrackPoint> points = gpxParser.parse(gpxIs);
 			RouteService routeService = ctx.getBean(RouteService.class);
@@ -86,13 +127,6 @@ public class HsqlSetup {
 		}
 
 	}
-
-	// <LatitudeDegrees>49.062677562713588</LatitudeDegrees>
-	// <LongitudeDegrees>8.4410415218024752</LongitudeDegrees>
-	//
-	//
-	// <LatitudeDegrees>49.104292209980912</LatitudeDegrees>
-	// <LongitudeDegrees>8.5084645778121342</LongitudeDegrees>
 
 	@Bean
 	public InitDB initDB() {
