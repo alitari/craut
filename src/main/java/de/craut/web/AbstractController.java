@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,14 +35,14 @@ public class AbstractController {
 	List<NavElement> createMainMenu(final String current) {
 
 		List<NavElement> mainMenu = new ArrayList<NavElement>();
-		mainMenu.add(new NavElement("/activities/home", "Home"));
+		mainMenu.add(new NavElement("/challenges/list", "Challenges"));
 		mainMenu.add(new NavElement("/activities/list", "Activities"));
 		mainMenu.add(new NavElement("/routes/list", "Routes"));
 		CollectionUtils.forAllDo(mainMenu, new Closure() {
 			@Override
 			public void execute(Object input) {
 				NavElement navElement = (NavElement) input;
-				navElement.setSelected(navElement.getText().contains(current));
+				navElement.setSelected(navElement.getText().equalsIgnoreCase(current));
 			}
 		});
 		return mainMenu;
@@ -59,13 +60,22 @@ public class AbstractController {
 		return filterMenu;
 	}
 
-	protected void fillPageContent(Model model, String page) {
-		updateUserData();
-		model.addAttribute("menuMain", createMainMenu(page));
-		model.addAttribute("menuHeader", createHeaderMenu(page, model));
+	protected void fillPageContent(Model model, String entities) {
+		fillPageContent(model, entities, null);
+	}
 
-		List<FileUpload> uploadsFromToday = routeService.fetchFileUploadsFromToday();
-		model.addAttribute("uploadsFromToday", uploadsFromToday);
+	protected void fillPageContent(Model model, String entities, Page<?> listPage) {
+		updateUserData();
+		model.addAttribute("menuMain", createMainMenu(entities));
+		model.addAttribute("menuHeader", createHeaderMenu(entities, model));
+
+		if (listPage != null) {
+			int current = listPage.getNumber();
+			int total = listPage.getTotalPages();
+			model.addAttribute("currentIndex", current);
+			model.addAttribute("totalIndex", total);
+			model.addAttribute(entities, listPage.getContent());
+		}
 
 	}
 

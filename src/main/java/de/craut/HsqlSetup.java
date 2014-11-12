@@ -24,6 +24,7 @@ import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
 import de.craut.domain.User;
 import de.craut.domain.UserRepository;
+import de.craut.service.ChallengeService;
 import de.craut.service.RouteService;
 import de.craut.util.geocalc.GPXParser;
 import de.craut.util.geocalc.GPXParser.GpxTrackPoint;
@@ -60,6 +61,9 @@ public class HsqlSetup {
 			createActivityFromRoute(ctx, routes.get(10), users.get(2));
 			createActivityFromRoute(ctx, routes.get(11), users.get(2));
 
+			ChallengeService challengeService = ctx.getBean(ChallengeService.class);
+			challengeService.saveChallenge("Challenge " + routes.get(2).getName(), routes.get(2));
+
 		}
 
 		private List<Route> createRoutes(ApplicationContext ctx, String path) {
@@ -91,7 +95,7 @@ public class HsqlSetup {
 			return list;
 		}
 
-		private void createActivityFromRoute(ApplicationContext ctx, Route route, User user) {
+		private Activity createActivityFromRoute(ApplicationContext ctx, Route route, User user) {
 			Date start = DateUtils.addMinutes(new Date(), -20);
 			Date end = new Date();
 
@@ -109,12 +113,13 @@ public class HsqlSetup {
 				routePoint.setSequence(i);
 				ActivityPoint activityPoint = new ActivityPoint(routePoint, start, 10 + 10 * random.nextDouble(), 0, 0, 0);
 				activityPoint.setActivityId(activity.getId());
-				start = DateUtils.addSeconds(start, 1);
+				start = DateUtils.addSeconds(start, 1 + random.nextInt(4));
 				apList.add(activityPoint);
 			}
 
 			ActivityPointRepository activityPointRepo = ctx.getBean(ActivityPointRepository.class);
 			activityPointRepo.save(apList);
+			return activity;
 		}
 
 		private Route saveRoute(ApplicationContext ctx, String path, String gpxFileName) {

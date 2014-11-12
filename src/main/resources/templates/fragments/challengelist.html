@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title> CRAUT challenges</title>
+<link rel="stylesheet" href="/css/styles.css" type="text/css" />
+<link href="D:\ws\git\craut\src\main\resources\static\css\styles.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!--
+
+//-->
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+</head>
+
+<body>
+    
+	<section th:fragment="content" id="content" class="column-right">
+        <script th:inline="javascript">
+         /*<![CDATA[*/
+         
+         var challenges= /*[[${challenges}]]*/;
+            var routeCoordinates = [[]];
+            for (var i = 0; i < challenges.length; i++) { 
+              routeCoordinates[i] = [challenges[i].routes.get(0).name, challenges[i].routes.get(0).startLatitude, challenges[i].routes.get(0).startLongitude, i,challenges[i].routes.get(0).distance,challenges[i].routes.get(0).elevation,challenges[i].routes.get(0).id ] 
+            }
+         
+         google.maps.event.addDomListener(window, 'load', initialize);
+        	
+        /*]]>*/
+		</script>
+	
+		<article>
+			<h3>Challenges</h3>
+			<table id="challenges">
+				<tr>
+				 <th> Name </th>
+				 <th> Distance </th>
+				 <th> Elevation </th>
+				 <th> Difficulty </th>
+				 
+				</tr>
+				<tr th:each="challenge : ${challenges}">
+<!-- 					<td> <a th:text="${route.id}" th:href="@{/routes/edit(id=${route.id})}">122</a></td> -->
+					<td> 
+					  <div><a th:text="${challenge.name}" th:href="@{/challenges/edit(id=${challenge.id})}">Challenge Kaltenbronn</a></div>
+					</td>
+					<td>
+					  <div th:text="${#numbers.formatDecimal(challenge.routes.get(0).distance/1000,0,2,'COMMA')}">30 km</div>
+					</td>
+					<td>
+					  <div th:text="${challenge.routes.get(0).elevation}+' m '">200 m</div>
+					</td>
+					<td>
+					    <div><a th:each="stars: ${#numbers.sequence(1,challenge.routes.get(0).difficultyStars)}" href="#"><span id="star" class="fa fa-star"></span></a>
+					    <span th:text="'('+${#numbers.formatDecimal(challenge.routes.get(0).difficulty,1,0)}+')'"></span>
+					    </div>
+					</td>
+                </tr>
+			</table>
+			
+			<div align="center" > 
+				<a th:if="${currentIndex} &gt; 0" th:href="@{list(page=${currentIndex}-1)}" href="#" class="button button-reversed">Previous</a>
+				<label th:text="'  Page '+(${currentIndex}+1)+' of '+${totalIndex} "> Page 4 of 10</label> 
+				<a th:if="${currentIndex} &lt; ${totalIndex-1}" th:href="@{list(page=${currentIndex}+1)}" class="button button-reversed">Next</a>
+			</div>
+		</article>
+
+
+
+
+	</section>
+
+</body>
+</html>

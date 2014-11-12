@@ -31,14 +31,8 @@ public class RouteController extends AbstractController {
 	}
 
 	private void fillPageContent(Model model, int pageNumber) {
-		fillPageContent(model, "Routes");
-
 		Page<Route> routePage = routeService.fetchRoutes(pageNumber);
-		int current = routePage.getNumber();
-		int total = routePage.getTotalPages();
-		model.addAttribute("currentIndex", current);
-		model.addAttribute("totalIndex", total);
-		model.addAttribute("routes", routePage.getContent());
+		fillPageContent(model, "routes", routePage);
 	}
 
 	@RequestMapping("/delete")
