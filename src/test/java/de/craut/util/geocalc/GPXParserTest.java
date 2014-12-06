@@ -16,11 +16,10 @@ public class GPXParserTest {
 
 	@Test
 	public void testName() throws Exception {
-		InputStream gpxIs = getClass().getResourceAsStream("/gpx/activities/22-08-2014.gpx");
+		InputStream gpxIs = getClass().getResourceAsStream("/gpx/activities/test1.gpx");
 
 		GPXParser gpxParser = new GPXParser();
 		List<GpxTrackPoint> points = gpxParser.parse(gpxIs);
-		System.out.println(points);
 		// assertThat(points.size(), is(3891));
 		//
 		// assertThat(points.get(467).getLatitude(), is(48.802322));

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Profile;
 
 import de.craut.domain.User;
 import de.craut.service.ActivityService;
+import de.craut.service.ChallengeService;
 import de.craut.service.RouteService;
 import de.craut.service.UserService;
 
@@ -32,6 +33,11 @@ public class TestContext {
 	@Bean
 	public UserService userService() {
 		return mock(UserService.class);
+	}
+
+	@Bean
+	public ChallengeService challengeService() {
+		return mock(ChallengeService.class);
 	}
 
 	@Bean
