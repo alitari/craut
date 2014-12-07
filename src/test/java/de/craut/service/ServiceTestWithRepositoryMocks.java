@@ -13,6 +13,8 @@ import org.junit.Before;
 import de.craut.domain.Activity;
 import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
+import de.craut.domain.Challenge;
+import de.craut.domain.ChallengeRepository;
 import de.craut.domain.FileUploadRepository;
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
@@ -25,12 +27,14 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 
 	protected List<Route> allRoutes;
 	protected List<Activity> allActivities;
+	protected List<Challenge> allChallenges;
 
 	protected ActivityRepository activityRepository;
 	protected RouteRepository routeRepository;
 	protected RoutePointRepository routePointRepository;
 	protected FileUploadRepository fileUploadRepository;
 	protected ActivityPointRepository activityPointRepository;
+	protected ChallengeRepository challengeRepository;
 
 	protected final static double latitudeMeter = 0.000009;
 	protected final static double longitudeMeter = 0.000014;
@@ -43,9 +47,11 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 		routePointRepository = mock(RoutePointRepository.class);
 		activityRepository = mock(ActivityRepository.class);
 		activityPointRepository = mock(ActivityPointRepository.class);
+		challengeRepository = mock(ChallengeRepository.class);
 
 		allRoutes = new ArrayList<Route>();
 		allActivities = new ArrayList<Activity>();
+		allChallenges = new ArrayList<Challenge>();
 
 		when(
 		        routeRepository.findByStartLatitudeLessThanAndStartLongitudeLessThanAndStartLatitudeGreaterThanAndStartLongitudeGreaterThan(anyDouble(),
@@ -53,7 +59,7 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 
 		when(routeRepository.findAll()).thenReturn(allRoutes);
 
-		underTest = createService(activityRepository, activityPointRepository, routeRepository, routePointRepository, fileUploadRepository);
+		underTest = createService(challengeRepository, activityRepository, activityPointRepository, routeRepository, routePointRepository, fileUploadRepository);
 	}
 
 	protected Route setupRoute(long id, String name, double... points) {
@@ -73,7 +79,8 @@ public abstract class ServiceTestWithRepositoryMocks<T> {
 
 	}
 
-	protected abstract T createService(ActivityRepository activityRepository, ActivityPointRepository activityPointRepository, RouteRepository routeRepository,
-	        RoutePointRepository routePointRepository, FileUploadRepository fileUploadRepository);
+	protected abstract T createService(ChallengeRepository challengeRepository2, ActivityRepository activityRepository,
+	        ActivityPointRepository activityPointRepository, RouteRepository routeRepository, RoutePointRepository routePointRepository,
+	        FileUploadRepository fileUploadRepository);
 
 }

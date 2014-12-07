@@ -21,6 +21,7 @@ import org.mockito.ArgumentCaptor;
 
 import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
+import de.craut.domain.ChallengeRepository;
 import de.craut.domain.FileUpload;
 import de.craut.domain.FileUpload.Format;
 import de.craut.domain.FileUpload.Type;
@@ -199,8 +200,9 @@ public class RouteServiceTest extends ServiceTestWithRepositoryMocks<RouteServic
 	}
 
 	@Override
-	protected RouteService createService(ActivityRepository activityRepository, ActivityPointRepository activityPointRepository,
-	        RouteRepository routeRepository, RoutePointRepository routePointRepository, FileUploadRepository fileUploadRepository) {
+	protected RouteService createService(ChallengeRepository challengeRepsoitory, ActivityRepository activityRepository,
+	        ActivityPointRepository activityPointRepository, RouteRepository routeRepository, RoutePointRepository routePointRepository,
+	        FileUploadRepository fileUploadRepository) {
 		return new RouteService(routeRepository, routePointRepository, fileUploadRepository);
 	}
 

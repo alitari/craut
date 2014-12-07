@@ -3,7 +3,9 @@ package de.craut.service;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +40,14 @@ public class ChallengeService {
 		return challenge;
 	}
 
-	public List<Challenge> fetchAllChallenges() {
-		return challengeRepository.findAll();
+	public Map<Challenge, List<Activity>> fetchAllChallenges() {
+		Map<Challenge, List<Activity>> result = new HashMap<Challenge, List<Activity>>();
+		List<Challenge> allChallenges = challengeRepository.findAll();
+		for (Challenge challenge : allChallenges) {
+			List<Activity> activities = activityRepository.findByRoute(challenge.getRoutes().get(0));
+			result.put(challenge, activities);
+		}
+		return result;
 	}
 
 	public Page<Challenge> fetchChallenges(Integer pageNumber) {

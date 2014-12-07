@@ -23,6 +23,7 @@ import de.craut.domain.Activity;
 import de.craut.domain.ActivityPoint;
 import de.craut.domain.ActivityPointRepository;
 import de.craut.domain.ActivityRepository;
+import de.craut.domain.ChallengeRepository;
 import de.craut.domain.FileUploadRepository;
 import de.craut.domain.Route;
 import de.craut.domain.RoutePoint;
@@ -92,8 +93,9 @@ public class ActivityServiceTest extends ServiceTestWithRepositoryMocks<Activity
 	// }
 
 	@Override
-	protected ActivityService createService(ActivityRepository activityRepository, ActivityPointRepository activityPointRepository,
-	        RouteRepository routeRepository, RoutePointRepository routePointRepository, FileUploadRepository fileUploadRepository) {
+	protected ActivityService createService(ChallengeRepository challengeRepsoitory, ActivityRepository activityRepository,
+	        ActivityPointRepository activityPointRepository, RouteRepository routeRepository, RoutePointRepository routePointRepository,
+	        FileUploadRepository fileUploadRepository) {
 		return new ActivityService(activityRepository, activityPointRepository, routeRepository, routePointRepository);
 	}
 
