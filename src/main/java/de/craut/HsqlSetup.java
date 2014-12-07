@@ -1,9 +1,6 @@
 package de.craut;
 
-import java.io.File;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +37,10 @@ public class HsqlSetup {
 
 			List<User> users = createUsers(ctx, "Tick", "Trick", "Track");
 
-			List<Route> routes = createRoutes(ctx, "/gpx/routes");
+			List<Route> routes = createRoutes(ctx, "Baden-Baden-RoteLache.gpx", "EttlingenSpessart.gpx", "Ettlingenweier-Malsch.gpx",
+			        "Gernsbach-Nachtigal.gpx", "Gernsbach-SchlossEberstein.gpx", "Herrenalb-Rotensol-Dobel.gpx", "Herrenalb-Rotensol-SchwannerWarte.gpx",
+			        "Hilbertsau-Schwarzmiss.gpx", "Maikammer-Kalmit.gpx", "Malsch-Freiolsheim.gpx", "Marxzell-Moosbronn.gpx", "OppenauerSteige.gpx",
+			        "Sasbachwalden.gpx", "Sohlberg.gpx", "Waldbrechtsweier-Freiolsheim.gpx");
 
 			createActivityFromRoute(ctx, routes.get(0), users.get(0));
 			createActivityFromRoute(ctx, routes.get(1), users.get(0));
@@ -66,21 +66,12 @@ public class HsqlSetup {
 
 		}
 
-		private List<Route> createRoutes(ApplicationContext ctx, String path) {
+		private List<Route> createRoutes(ApplicationContext ctx, String... filenames) {
 			ArrayList<Route> savedRoutes = new ArrayList<Route>();
-			URL dirURL = getClass().getResource(path);
-			String[] routeFiles = null;
-			try {
-				routeFiles = new File(dirURL.toURI()).list();
-				for (int i = 0; i < routeFiles.length; i++) {
-					Route saveRoute = saveRoute(ctx, path, routeFiles[i]);
-					savedRoutes.add(saveRoute);
-				}
-
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e);
+			for (int i = 0; i < filenames.length; i++) {
+				Route saveRoute = saveRoute(ctx, "/gpx/routes", filenames[i]);
+				savedRoutes.add(saveRoute);
 			}
-
 			return savedRoutes;
 		}
 
